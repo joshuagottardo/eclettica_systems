@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eclettica Accessori</title>
+    <link href="/style.css" rel="stylesheet" />
+    <script src="components/header.js"></script>
+    <script type="module" src="/main.js"></script>
+    <script type="module" src="pages/inserimento.js"></script>
+  </head>
+  <body
+    class="min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
+    <nav
+      class="w-full bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
+      <!-- Sinistra: Freccia indietro -->
+      <a
+        href="javascript:history.back()"
+        title="Indietro"
+        class="text-gray-100 hover:text-custom-100 transition text-2xl flex items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7" />
+        </svg>
+      </a>
+
+      <!-- Destra: Ricerca e Nuovo articolo con testo sotto -->
+      <div class="flex gap-6 items-end">
+        <a
+          href="/ricerca.html"
+          title="Ricerca"
+          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 mb-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <circle cx="11" cy="11" r="7" stroke-width="2" />
+            <line
+              x1="21"
+              y1="21"
+              x2="16.65"
+              y2="16.65"
+              stroke-width="2"
+              stroke-linecap="round" />
+          </svg>
+          <span class="text-xs font-medium">Ricerca</span>
+        </a>
+        <a
+          href="/inserimento.html"
+          title="Nuovo articolo"
+          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 mb-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <line
+              x1="12"
+              y1="5"
+              x2="12"
+              y2="19"
+              stroke-width="2"
+              stroke-linecap="round" />
+            <line
+              x1="5"
+              y1="12"
+              x2="19"
+              y2="12"
+              stroke-width="2"
+              stroke-linecap="round" />
+          </svg>
+          <span class="text-xs font-medium">Aggiungi</span>
+        </a>
+      </div>
+    </nav>
+
+    <main class="flex flex-grow w-full overflow-hidden mt-2">
+      <!-- Colonna sinistra -->
+      <section class="w-1/2 overflow-y-auto p-6 pt-0 space-y-8">
+        <!-- Dati Articolo -->
+        <div>
+          <h3
+            class="text-lg text-neutral-600 mb-2 border-b border-custom-600 pb-1">
+            Dati articolo
+          </h3>
+
+          <div class="mb-4">
+            <label class="block mb-1 text-lg">NOME</label>
+            <input
+              type="text"
+              class="w-3/4 bg-custom-800 text-white rounded p-2" />
+          </div>
+
+          <div class="mb-4">
+            <label class="block mb-1 text-lg">TIPO</label>
+            <select
+              class="w-3/4 bg-custom-800 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500">
+              <option>zeppa</option>
+              <option>ceppo</option>
+              <option>tacco</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="block mb-1 text-lg">NUMERO PEZZI</label>
+            <input
+              type="number"
+              min="1"
+              class="w-3/4 bg-custom-800 text-white rounded p-2" />
+          </div>
+        </div>
+
+        <!-- Dettagli tecnici -->
+        <div>
+          <h3
+            class="text-lg text-neutral-600 mb-2 border-b border-custom-600 pb-1">
+            Dettagli tecnici
+          </h3>
+
+          <!-- Materiali -->
+
+          <label class="block mb-3 text-lg">MATERIALI</label>
+          <div class="p-4 w-3/4 mb-4 bg-custom-800 rounded-lg">
+            <div id="materiali-container" class="flex flex-wrap gap-3"></div>
+          </div>
+
+          <div class="mb-4">
+            <label class="block mb-1 text-lg">ALTEZZA</label>
+            <input
+              type="number"
+              min="1"
+              class="w-3/4 bg-custom-800 text-white rounded p-2" />
+          </div>
+
+          <div class="mb-4">
+            <label class="block mb-1 text-lg">PUNTA</label>
+            <select
+              class="w-3/4 bg-custom-800 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500">
+              <option>punta 1</option>
+              <option>punta 2</option>
+              <option>punta 3</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="block mb-1 text-lg">TACCO</label>
+            <select
+              class="w-3/4 bg-custom-800 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500">
+              <option>tacco 1</option>
+              <option>tacco 2</option>
+              <option>tacco 3</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-1 text-lg">ACCESSORI</label>
+          <input
+            type="text"
+            class="w-3/4 bg-custom-800 text-white rounded p-2" />
+        </div>
+
+        <div class="mb-4">
+          <h3
+            class="text-lg text-neutral-600 mb-2 border-b border-custom-600 pb-1">
+            Altri dettagli
+          </h3>
+          <label class="block mb-1 text-lg">AZIENDA</label>
+          <select
+            class="w-3/4 bg-custom-800 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500">
+            <option>azienda 1</option>
+            <option>azienda 2</option>
+            <option>azienda 3</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Colonna destra -->
+      <section class="w-1/2 p-6 pt-3 flex flex-col gap-6">
+        <div
+          class="image-drop relative bg-custom-700 rounded-lg shadow-inner flex items-center justify-center"
+          data-id="principale">
+          <i>foto principale</i>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="esterno">
+            <i>lato esterno</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="interno">
+            <i>lato interno</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="sopra">
+            <i>sopra</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="sotto">
+            <i>sotto</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="punta">
+            <i>punta</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="tacco">
+            <i>tacco</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="accessorio">
+            <i>accessori</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="articolo">
+            <i>articolo</i>
+          </div>
+          <div
+            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center"
+            data-id="finitura">
+            <i>finitura</i>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="text-right mr-5 mb-5">
+      <button
+        type="submit"
+        class="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded">
+        Aggiungi articolo
+      </button>
+    </div>
+  </body>
+</html>

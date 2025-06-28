@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Avvia gestionale",
+      "type": "shell",
+      "command": "npm run start",
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "Avvia Vite + Electron"
+    }
+  ]
+}

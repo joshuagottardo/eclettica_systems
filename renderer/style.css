@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.image-drop {
+  height: clamp(7rem, 15vh, 30rem);
+}
+
+.image-drop[data-id="principale"] {
+  height: clamp(300px, 40vh, 600px);
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(.4,0,.2,1);
+}
