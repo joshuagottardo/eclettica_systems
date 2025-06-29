@@ -3,18 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eclettica Accessori</title>
-    <link rel="stylesheet" href="/style.css" />
+    <title>Eclettica Systems - Login</title>
+    <link href="style.css" rel="stylesheet" />
     <script type="module" src="/main.js"></script>
   </head>
   <body
-    class="min-h-screen flex flex-col items-center justify-center bg-custom-900 text-center font-sans p-4">
-    <h1 class="text-4xl font-bold text-neutral-100 mb-8">Eclettica Accessori</h1>
+    class="bg-custom-900 text-white min-h-screen flex flex-col items-center justify-center font-sans overflow-hidden">
+    <div
+      id="intro"
+      class="flex flex-col items-center transition-all duration-700 ease-in-out">
+      <!-- Titolo di benvenuto -->
+      <div id="benvenuto" class="text-center mb-12">
+        <h1 class="text-5xl md:text-6xl font-bold fade-in">
+          BENVENUTI IN ECLETTICA SYSTEMS
+        </h1>
+      </div>
 
-    <button
-      id="open-ricerca"
-      class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded shadow-lg transition">
-      Cerca un articolo
-    </button>
+      <!-- Griglia utenti -->
+      <div
+        id="utenti-grid"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 px-4 max-w-screen-md min-h-[300px]"></div>
+    </div>
+
+    <!-- Area saluto/login nascosta -->
+    <div
+      id="login-box"
+      class="hidden flex flex-col items-center mt-12 space-y-4">
+      <h1 id="saluto" class="text-5xl font-semibold"></h1>
+      <form id="login-form" class="flex flex-col items-center space-y-4 min-h-[200px]">
+        <input
+          id="password"
+          type="password"
+          placeholder="Inserisci password"
+          class="px-4 py-2 rounded text-black w-64 hidden" />
+        <button
+          type="submit"
+          class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-semibold hidden">
+          Login
+        </button>
+      </form>
+
+      <!-- 🔁 Link per tornare alla selezione utente -->
+      <button
+        id="cambia-utente"
+        class="text-sm text-neutral-500 underline hover:text-custom-100 transition mt-4 hidden">
+        Cambia utente
+      </button>
+    </div>
   </body>
 </html>

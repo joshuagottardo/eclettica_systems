@@ -41,7 +41,7 @@ app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
 // Serve le immagini statiche come prima
 app.use("/immagini/articoli", express.static(ARTICOLI_DIR));
 
-// Serve the React app (test purpose)
+
 app.get("/api/test", (req, res) => {
   res.json({ message: "API funzionante!" });
 });
@@ -50,7 +50,7 @@ app.get("/api/test", (req, res) => {
 app.get("/api/materiali", async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT nome FROM materiale ORDER BY nome ASC"
+      "SELECT nome FROM materiale_base ORDER BY nome ASC"
     );
     res.json(rows);
   } catch (err) {

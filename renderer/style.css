@@ -2,6 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.9s ease-out forwards;
+  }
+
+  .fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+  }
+
+  .translate-up-100 {
+    transform: translateY(-100px);
+    transition: transform 0.6s ease-in-out;
+  }
+
+  .translate-up-40 {
+    transform: translateY(-40px);
+    transition: transform 0.6s ease-out;
+  }
+
+  .translate-start {
+    transform: translateY(0);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+}
 
 .image-drop {
   height: clamp(7rem, 15vh, 30rem);
@@ -9,9 +54,4 @@
 
 .image-drop[data-id="principale"] {
   height: clamp(300px, 40vh, 600px);
-}
-
-.fade-out {
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(.4,0,.2,1);
 }
