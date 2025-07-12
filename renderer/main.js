@@ -1,9 +1,6 @@
+import { utenti } from "./globals.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  const utenti = [
-    "angelo", "simone", "angelica", "antonio", "bruno",
-    "daniela", "dora", "elena", "marianna", "martina", "paola",
-    "paolo", "vera", "admin"
-  ];
 
   const audio = new Audio("resources/audio/benvenuti.mp3");
   audio.play().catch((err) => {
@@ -95,10 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value;
 
     if (password.toLowerCase() === nome.toLowerCase()) {
-      localStorage.setItem("utente", nome);
+      sessionStorage.setItem("utente_loggato", nome);
       document.body.classList.add("fade-out");
       setTimeout(() => {
-        window.location.href = "/ricerca.html";
+        window.location.href = "/categorie.html";
       }, 500);
     } else {
       alert("Password errata");

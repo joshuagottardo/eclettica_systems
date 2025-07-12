@@ -4,14 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECLETTICA ACCESSORI</title>
-    <link rel="stylesheet" href="/style.css" />
-    <script type="module" src="/pages/ricerca.js"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <script type="module" src="../pages/ricerca.js"></script>
   </head>
   <body
-    class="min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
+    class="ricerca min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
     <nav
-      class="w-full bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
-      <!-- Sinistra: refresh -->
+      class="fixed top-0 left-0 right-0 z-50 bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
+      <!-- Sinistra: Freccia indietro -->
+      <a
+        class="text-gray-100 hover:text-custom-100 transition text-2xl flex items-center"
+        href="javascript:history.back()"
+        title="Indietro">
+        <svg
+          class="h-7 w-7"
+          fill="none"
+          stroke="currentColor"
+          viewbox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M15 19l-7-7 7-7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"></path>
+        </svg>
+      </a>
+      <!-- Destra: Ricerca e Nuovo articolo con testo sotto -->
       <button
         id="refreshBtn"
         title="Aggiorna cache"
@@ -29,61 +47,9 @@
             d="M3 12a9 9 0 0115.9-5.6m1.6-2.4v6h-6m6 5.6A9 9 0 018.1 20.4M6.5 22v-6h6" />
         </svg>
       </button>
-      <!-- Destra: pagine -->
-      <div class="flex gap-6 items-end">
-        <a
-          href="/ricerca.html"
-          title="Ricerca"
-          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7 mb-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <circle cx="11" cy="11" r="7" stroke-width="2" />
-            <line
-              x1="21"
-              y1="21"
-              x2="16.65"
-              y2="16.65"
-              stroke-width="2"
-              stroke-linecap="round" />
-          </svg>
-          <span class="text-xs font-medium">Ricerca</span>
-        </a>
-        <a
-          href="/inserimento.html"
-          title="Nuovo articolo"
-          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7 mb-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <line
-              x1="12"
-              y1="5"
-              x2="12"
-              y2="19"
-              stroke-width="2"
-              stroke-linecap="round" />
-            <line
-              x1="5"
-              y1="12"
-              x2="19"
-              y2="12"
-              stroke-width="2"
-              stroke-linecap="round" />
-          </svg>
-          <span class="text-xs font-medium">Aggiungi</span>
-        </a>
-      </div>
     </nav>
 
     <main class="flex flex-grow w-full h-[calc(100vh-74px)] overflow-hidden">
-      <!-- Colonna sinistra -->
       <section
         class="w-1/2 overflow-y-auto p-6 border-r border-custom-100 space-y-6">
         <div class="bg-custom-800 rounded rounded-lg p-6">
@@ -146,7 +112,9 @@
 
         <div class="bg-custom-800 rounded rounded-lg p-6">
           <p class="font-inconsolata text-2xl">MATERIALI</p>
-          <div id="filtroMateriali" class="flex gap-3 flex-wrap mt-4 opacity-0 transition-opacity duration-1000 min-h-[95px]"></div>
+          <div
+            id="filtroMateriali"
+            class="flex gap-3 flex-wrap mt-4 opacity-0 transition-opacity duration-1000 min-h-[95px]"></div>
         </div>
 
         <div class="bg-custom-800 rounded rounded-lg p-6">

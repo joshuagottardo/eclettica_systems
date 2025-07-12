@@ -188,12 +188,6 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
       ? materialiRaw
       : [materialiRaw];
 
-    console.log("BODY completo:", req.body);
-    console.log("Materiali (raw):", req.body["materiali[]"]);
-    console.log("Materiali interpretati:", materiali);
-
-    console.log("test");
-
     // ✅ Validazione obbligatori
     if (!codice) {
       return res.status(400).json({ error: "Il campo CODICE è obbligatorio." });
@@ -263,7 +257,7 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
         "SELECT id FROM materiale_base WHERE nome = ? LIMIT 1",
         [nome_materiale]
       );
-      console.log("test");
+
       if (rows.length) {
         await pool.query(
           `INSERT INTO articolo_materiale (id_articolo, id_materiale) VALUES (?, ?)`,
@@ -293,6 +287,40 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
       .status(500)
       .json({ error: "Errore durante il salvataggio dell'articolo" });
   }
+});
+
+app.post("/api/stati", async (req, res) => {
+  const { nome } = req.body;
+  if (!nome) return res.status(400).json({ error: "Nome stato obbligatorio" });
+
+  const [rows] = await pool.query(
+    "SELECT 1 FROM articolo WHERE stato_produzione = ? LIMIT 1",
+    [nome]
+  );
+
+  if (rows.length) {
+    return res.status(409).json({ error: "Stato già esistente" });
+  }
+
+  res.json({ success: true });
+});
+
+app.post("/api/citta", async (req, res) => {
+  const { stato, nome } = req.body;
+  if (!stato || !nome) return res.status(400).json({ error: "Dati mancanti" });
+
+  const [rows] = await pool.query(
+    "SELECT 1 FROM articolo WHERE stato_produzione = ? AND citta_produzione = ? LIMIT 1",
+    [stato, nome]
+  );
+
+  if (rows.length) {
+    return res
+      .status(409)
+      .json({ error: "Città già presente per questo stato" });
+  }
+
+  res.json({ success: true });
 });
 
 app.listen(PORT, () =>

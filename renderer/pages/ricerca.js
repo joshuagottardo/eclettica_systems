@@ -266,6 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.apriDettaglio = function (id) {
     sessionStorage.setItem("articoloId", id);
-    window.location.href = "/dettagli.html";
+    window.location.href = "dettagli.html";
   };
 });

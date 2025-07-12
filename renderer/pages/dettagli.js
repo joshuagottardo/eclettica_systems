@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const id = parseInt(sessionStorage.getItem("articoloId"));
   const cache = JSON.parse(sessionStorage.getItem("cacheArticoli"));
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const articolo = cache.find(a => a.id === id);
+  const articolo = cache.find((a) => a.id === id);
   if (!articolo) {
     alert("Articolo non trovato.");
     return;
@@ -35,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (lista && Array.isArray(articolo.materiali)) {
     const ul = document.createElement("ul");
     ul.className = "list-disc pl-5";
-    articolo.materiali.forEach(m => {
+    articolo.materiali.forEach((m) => {
       const li = document.createElement("li");
       li.textContent = m;
       ul.appendChild(li);
@@ -53,5 +52,19 @@ document.addEventListener("DOMContentLoaded", () => {
     img.onerror = () => div.classList.add("opacity-30");
     div.innerHTML = "";
     div.appendChild(img);
+    img.addEventListener("click", () => {
+      popupImage.src = img.src;
+      popupOverlay.classList.remove("hidden");
+    });
   });
+});
+
+popupOverlay.addEventListener("click", () => {
+  popupOverlay.classList.add("hidden");
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    popupOverlay.classList.add("hidden");
+  }
 });

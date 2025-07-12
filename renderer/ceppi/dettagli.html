@@ -5,14 +5,13 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ECLETTICA ACCESSORI</title>
-    <link href="style.css" rel="stylesheet" />
-    <script src="pages/dettagli.js" type="module"></script>
+    <link href="../style.css" rel="stylesheet" />
+    <script src="../pages/dettagli.js" type="module"></script>
   </head>
   <body
-    class="inserimento min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
+    class="dettagli min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
-      <!-- Sinistra: Freccia indietro -->
       <a
         class="text-gray-100 hover:text-custom-100 transition text-2xl flex items-center"
         href="javascript:history.back()"
@@ -30,57 +29,6 @@
             stroke-width="2"></path>
         </svg>
       </a>
-      <!-- Destra: Ricerca e Nuovo articolo con testo sotto -->
-      <div class="flex gap-6 items-end">
-        <a
-          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition"
-          href="/ricerca.html"
-          title="Ricerca">
-          <svg
-            class="h-7 w-7 mb-1"
-            fill="none"
-            stroke="currentColor"
-            viewbox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
-            <line
-              stroke-linecap="round"
-              stroke-width="2"
-              x1="21"
-              x2="16.65"
-              y1="21"
-              y2="16.65"></line>
-          </svg>
-          <span class="text-xs font-medium">Ricerca</span>
-        </a>
-        <a
-          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition"
-          href="/inserimento.html"
-          title="Nuovo articolo">
-          <svg
-            class="h-7 w-7 mb-1"
-            fill="none"
-            stroke="currentColor"
-            viewbox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <line
-              stroke-linecap="round"
-              stroke-width="2"
-              x1="12"
-              x2="12"
-              y1="5"
-              y2="19"></line>
-            <line
-              stroke-linecap="round"
-              stroke-width="2"
-              x1="5"
-              x2="19"
-              y1="12"
-              y2="12"></line>
-          </svg>
-          <span class="text-xs font-medium">Aggiungi</span>
-        </a>
-      </div>
     </nav>
     <main class="flex flex-grow w-full overflow-hidden">
       <!-- Colonna sinistra -->
@@ -146,56 +94,64 @@
       <!-- Colonna destra -->
       <section class="w-1/2 pt-6 pr-6 pl-6 pb-3 flex flex-col gap-6">
         <div
-          class="image-drop relative bg-custom-700 rounded-lg shadow-inner flex items-center justify-center h-64"
+          class="image-drop image-pop-up relative bg-custom-700 rounded-lg shadow-inner flex items-center justify-center h-64"
           data-id="principale">
           <i class="font-inconsolata">foto principale</i>
         </div>
         <div class="grid grid-cols-3 gap-4">
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="esterno">
             <i class="font-inconsolata">lato esterno</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="interno">
             <i class="font-inconsolata">lato interno</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="sopra">
             <i class="font-inconsolata">sopra</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="sotto">
             <i class="font-inconsolata">sotto</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="punta">
             <i class="font-inconsolata">punta</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="tacco">
             <i class="font-inconsolata">tacco</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="accessorio">
             <i class="font-inconsolata">accessori</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="articolo">
             <i class="font-inconsolata">articolo</i>
           </div>
           <div
-            class="image-drop relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
+            class="image-drop image-pop-up relative bg-custom-700 rounded shadow-inner flex items-center justify-center h-32"
             data-id="finitura">
             <i class="font-inconsolata">finitura</i>
           </div>
+        </div>
+        <div
+          id="popupOverlay"
+          class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+          <img
+            id="popupImage"
+            class="max-w-[90%] max-h-[90%] rounded shadow-lg"
+            alt="popup" />
         </div>
       </section>
     </main>

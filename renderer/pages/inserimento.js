@@ -283,3 +283,85 @@ document.addEventListener("DOMContentLoaded", () => {
     .querySelector("button[type='submit']")
     ?.addEventListener("click", inviaArticolo);
 });
+
+function mostraPopup(titolo, callback) {
+  const overlay = document.getElementById("popupOverlay");
+  const input = document.getElementById("popupInput");
+  const errore = document.getElementById("popupErrore");
+  document.getElementById("popupTitle").textContent = titolo;
+  input.value = "";
+  errore.classList.add("hidden");
+
+  overlay.classList.remove("hidden");
+
+  const annulla = () => {
+    overlay.classList.add("hidden");
+    conferma.removeEventListener("click", confermaHandler);
+    annullaBtn.removeEventListener("click", annulla);
+  };
+
+  const confermaHandler = async () => {
+    const valore = input.value.trim();
+    if (!valore) return;
+
+    const erroreMessaggio = await callback(valore);
+    if (erroreMessaggio) {
+      errore.textContent = erroreMessaggio;
+      errore.classList.remove("hidden");
+    } else {
+      overlay.classList.add("hidden");
+      conferma.removeEventListener("click", confermaHandler);
+      annullaBtn.removeEventListener("click", annulla);
+    }
+  };
+
+  const conferma = document.getElementById("popupConferma");
+  const annullaBtn = document.getElementById("popupAnnulla");
+  conferma.addEventListener("click", confermaHandler);
+  annullaBtn.addEventListener("click", annulla);
+}
+
+document.getElementById("btnAggiungiStato")?.addEventListener("click", () => {
+  mostraPopup("Aggiungi stato produzione", async (valore) => {
+    const res = await fetch("/api/stati", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome: valore }),
+    });
+    const json = await res.json();
+    if (!res.ok) return json.error || "Errore generico";
+    const select = document.getElementById("filtroStatoProduzione");
+    const opt = document.createElement("option");
+    opt.value = valore;
+    opt.textContent = valore;
+    select.appendChild(opt);
+    select.value = valore;
+    select.dispatchEvent(new Event("change"));
+    return null;
+  });
+});
+
+document.getElementById("btnAggiungiCitta")?.addEventListener("click", () => {
+  const stato = document.getElementById("filtroStatoProduzione").value;
+  if (!stato) {
+    alert("Seleziona prima uno stato.");
+    return;
+  }
+
+  mostraPopup("Aggiungi città di produzione", async (valore) => {
+    const res = await fetch("/api/citta", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ stato, nome: valore }),
+    });
+    const json = await res.json();
+    if (!res.ok) return json.error || "Errore generico";
+    const select = document.getElementById("filtroCittaProduzione");
+    const opt = document.createElement("option");
+    opt.value = valore;
+    opt.textContent = valore;
+    select.appendChild(opt);
+    select.value = valore;
+    return null;
+  });
+});

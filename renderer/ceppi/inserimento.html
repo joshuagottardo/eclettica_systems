@@ -5,15 +5,13 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ECLETTICA ACCESSORI</title>
-    <link href="style.css" rel="stylesheet" />
-    <script src="components/header.js"></script>
-    <script src="pages/inserimento.js" type="module"></script>
+    <link href="../style.css" rel="stylesheet" />
+    <script src="../pages/inserimento.js" type="module"></script>
   </head>
   <body
     class="inserimento min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
-      <!-- Sinistra: Freccia indietro -->
       <a
         class="text-gray-100 hover:text-custom-100 transition text-2xl flex items-center"
         href="javascript:history.back()"
@@ -31,57 +29,6 @@
             stroke-width="2"></path>
         </svg>
       </a>
-      <!-- Destra: Ricerca e Nuovo articolo con testo sotto -->
-      <div class="flex gap-6 items-end">
-        <a
-          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition"
-          href="/ricerca.html"
-          title="Ricerca">
-          <svg
-            class="h-7 w-7 mb-1"
-            fill="none"
-            stroke="currentColor"
-            viewbox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
-            <line
-              stroke-linecap="round"
-              stroke-width="2"
-              x1="21"
-              x2="16.65"
-              y1="21"
-              y2="16.65"></line>
-          </svg>
-          <span class="text-xs font-medium">Ricerca</span>
-        </a>
-        <a
-          class="flex flex-col items-center text-gray-100 hover:text-custom-100 transition"
-          href="/inserimento.html"
-          title="Nuovo articolo">
-          <svg
-            class="h-7 w-7 mb-1"
-            fill="none"
-            stroke="currentColor"
-            viewbox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <line
-              stroke-linecap="round"
-              stroke-width="2"
-              x1="12"
-              x2="12"
-              y1="5"
-              y2="19"></line>
-            <line
-              stroke-linecap="round"
-              stroke-width="2"
-              x1="5"
-              x2="19"
-              y1="12"
-              y2="12"></line>
-          </svg>
-          <span class="text-xs font-medium">Aggiungi</span>
-        </a>
-      </div>
     </nav>
     <main class="flex flex-grow w-full overflow-hidden">
       <!-- Colonna sinistra -->
@@ -136,8 +83,7 @@
               <label class="block mb-4">Finitura</label>
               <select
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
-                id="filtroFinitura">
-              </select>
+                id="filtroFinitura"></select>
             </div>
           </div>
         </div>
@@ -169,7 +115,16 @@
           </div>
           <div class="flex gap-4 mt-6">
             <div class="w-1/2">
-              <label class="block mb-3">Stato produzione</label>
+              <label class="block mb-3 flex items-center justify-between">
+                <span>Stato produzione</span>
+                <button
+                  id="btnAggiungiStato"
+                  type="button"
+                  class="text-neutral-500 text-xl font-bold px-2">
+                  +
+                </button>
+              </label>
+
               <select
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
                 id="filtroStatoProduzione">
@@ -177,13 +132,42 @@
               </select>
             </div>
             <div class="w-1/2">
-              <label class="block mb-3">Città produzione</label>
+              <label class="block mb-3 flex items-center justify-between">
+                <span>Città produzione</span>
+                <button
+                  id="btnAggiungiCitta"
+                  type="button"
+                  class="text-neutral-500 text-xl font-bold px-2">
+                  +
+                </button>
+              </label>
+
               <select
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
                 id="filtroCittaProduzione">
                 <option value=""></option>
               </select>
             </div>
+          </div>
+        </div>
+        <div
+          id="popupOverlay"
+          class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
+          <div class="bg-custom-800 p-6 rounded-lg w-96 space-y-4">
+            <p id="popupTitle" class="text-xl font-bold">Aggiungi elemento</p>
+            <input
+              id="popupInput"
+              type="text"
+              class="w-full p-2 rounded bg-custom-900 text-white border border-custom-100" />
+            <div class="flex justify-end gap-4 mt-4">
+              <button id="popupAnnulla" class="bg-gray-600 px-4 py-2 rounded">
+                Annulla
+              </button>
+              <button id="popupConferma" class="bg-green-700 px-4 py-2 rounded">
+                Aggiungi
+              </button>
+            </div>
+            <p id="popupErrore" class="text-red-400 text-sm mt-2 hidden"></p>
           </div>
         </div>
       </section>

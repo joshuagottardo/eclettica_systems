@@ -54,6 +54,10 @@
   font-family: "Helvetica", "Arial", "ui-sans-serif", "system-ui", sans-serif;
 }
 
-body.inserimento {
-  padding-top: 72px; /* Altezza della navbar */
+nav{
+  height: 50px;;
+}
+
+body.inserimento, body.ricerca, body.dettagli {
+  padding-top: 50px;
 }
