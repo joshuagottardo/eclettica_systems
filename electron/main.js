@@ -11,7 +11,9 @@ function createWindow() {
       contextIsolation: true
     }
   });
-
+  
+  win.setMinimumSize(1200, 800);
+  
   const url = isDev
     ? 'http://localhost:5173'
     : `file://${path.join(__dirname, '../dist/index.html')}`;

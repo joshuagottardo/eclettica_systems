@@ -6,6 +6,8 @@ import fs from "fs";
 import multer from "multer";
 import sharp from "sharp";
 
+import { ArticoloSchema } from "./models/articolo.js";
+
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -26,6 +28,61 @@ const PORT = 3001;
 app.use(express.json());
 app.use(cors());
 
+// Serve le immagini statiche
+app.use("/immagini/articoli", express.static(ARTICOLI_DIR));
+
+app.get("/api/articoli", async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT
+        a.id,
+        a.codice,
+        az1.nome AS azienda,
+        a.stato_produzione,
+        a.citta_produzione,
+        a.tipologia,
+        a.punta,
+        a.altezza_tacco,
+        a.numero_pezzi,
+        a.accessorio,
+        a.forma_matricola,
+        a.forma_id_azienda,
+        az2.nome AS azienda_forma,
+        f.nome AS finitura,
+        GROUP_CONCAT(m.nome) AS materiali
+      FROM articolo a
+      LEFT JOIN azienda az1 ON a.id_azienda = az1.id
+      LEFT JOIN azienda az2 ON a.forma_id_azienda = az2.id
+      LEFT JOIN finitura f ON a.id_finitura = f.id
+      LEFT JOIN articolo_materiale am ON am.id_articolo = a.id
+      LEFT JOIN materiale_base m ON am.id_materiale = m.id
+      GROUP BY a.id
+    `);
+
+    // Validazione (array di articoli)
+    const articoliValidi = [];
+    for (const row of rows) {
+      try {
+        // Converte la stringa "materiali" in array, oppure [] se null/vuoto
+        row.materiali = row.materiali
+          ? row.materiali.split(",")
+          : [];
+        articoliValidi.push(ArticoloSchema.parse(row));
+      } catch (err) {
+        console.error("Errore di validazione articolo:", {
+          dati: row,
+          errori: err.errors,
+        });
+      }
+    }
+
+    res.json(articoliValidi);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
   const { id, tipo } = req.params;
   for (const ext of ESTENSIONI_FOTO) {
@@ -34,13 +91,8 @@ app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
       return res.sendFile(filePath);
     }
   }
-  // Se non trova nessun file:
   res.status(404).json({ found: false });
 });
-
-// Serve le immagini statiche come prima
-app.use("/immagini/articoli", express.static(ARTICOLI_DIR));
-
 
 app.get("/api/test", (req, res) => {
   res.json({ message: "API funzionante!" });
@@ -52,35 +104,23 @@ app.get("/api/materiali", async (req, res) => {
     const [rows] = await pool.query(
       "SELECT nome FROM materiale_base ORDER BY nome ASC"
     );
-    res.json(rows);
+    const nomiMateriali = rows.map(row => row.nome);
+    res.json(nomiMateriali);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Select all articles from the 'articolo' table
-app.get("/api/articoli", async (req, res) => {
+app.get('/api/finiture', async (req, res) => {
   try {
-    const [rows] = await pool.query(`
-      SELECT 
-        articolo.id,
-        articolo.nome,
-        articolo.tipo,
-        articolo.numero_pezzi,
-        articolo.altezza,
-        articolo.punta,
-        articolo.tacco,
-        articolo.accessori,
-        azienda.nome AS nome_azienda,
-        azienda.brand AS brand_azienda
-      FROM articolo
-      LEFT JOIN azienda ON articolo.id_azienda = azienda.id
-    `);
-    res.json(rows);
+    const [rows] = await pool.query('SELECT nome FROM finitura');
+    const finiture = rows.map(row => row.nome);
+    res.json(finiture);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Select all companies from the 'azienda' table
 app.get("/api/aziende", async (req, res) => {

@@ -18,6 +18,9 @@ export default {
           950: "#121212",
         },
       },
+      fontFamily: {
+        inconsolata: ['Inconsolata', 'monospace'],
+      }
     },
     fontFamily: {
       sans: ["Helvetica", "Arial", "ui-sans-serif", "system-ui", "sans-serif"],

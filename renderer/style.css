@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,10 +50,10 @@
   }
 }
 
-.image-drop {
-  height: clamp(7rem, 15vh, 30rem);
+* {
+  font-family: "Helvetica", "Arial", "ui-sans-serif", "system-ui", sans-serif;
 }
 
-.image-drop[data-id="principale"] {
-  height: clamp(300px, 40vh, 600px);
+body.inserimento {
+  padding-top: 72px; /* Altezza della navbar */
 }

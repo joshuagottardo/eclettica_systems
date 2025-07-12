@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const utenti = [
-    "angelo", "simone", "andrea", "angelica", "antonio", "bruno",
+    "angelo", "simone", "angelica", "antonio", "bruno",
     "daniela", "dora", "elena", "marianna", "martina", "paola",
-    "paolo", "vera", "virginie", "amministratore"
+    "paolo", "vera", "admin"
   ];
 
   const audio = new Audio("resources/audio/benvenuti.mp3");
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     utenti.forEach((nome, index) => {
       const div = document.createElement("div");
       div.className =
-        "utente-item bg-custom-700 text-white p-5 rounded-lg text-center cursor-pointer opacity-0 scale-95 transition duration-500 ease-out";
+        "utente-item bg-custom-700 text-white text-m p-5 rounded text-center cursor-pointer opacity-0 scale-95 transition duration-500 ease-out";
       div.textContent = nome.toUpperCase();
       div.dataset.nome = nome;
       grid.appendChild(div);

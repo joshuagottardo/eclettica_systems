@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://trentin-nas.synology.me:443', // porta del backend
+        target: 'https://trentin-nas.synology.me:443',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '/api')
       }

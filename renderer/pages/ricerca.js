@@ -1,187 +1,254 @@
-let articoloCache = []; // solo id, nome, brand
-let dettagliCache = new Map();
-let aziendeCache = [];
-let selectedTipo = null;
-let filtriAperti = false;
-let articoloSelezionato = null;
-
-const FOTO_TIPI = [
-  { chiave: "principale", label: "Principale" },
-  { chiave: "esterno", label: "Esterno" },
-  { chiave: "interno", label: "Interno" },
-  { chiave: "sopra", label: "Sopra" },
-  { chiave: "sotto", label: "Sotto" },
-  { chiave: "punta", label: "Punta" },
-  { chiave: "tacco", label: "Tacco" },
-  { chiave: "accessori", label: "Accessori" },
-  { chiave: "articolo", label: "Articolo" },
-  { chiave: "finitura", label: "Finitura" },
-];
+// --- INIZIALIZZAZIONE E CARICAMENTO ---
+let cacheArticoli = [];
+let materialiDisponibili = [];
+let mappaStatoCitta = {};
 
 function normalizza(str) {
-  return str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 }
 
 async function caricaArticoli() {
   try {
     const res = await fetch("/api/articoli");
     if (!res.ok) throw new Error("HTTP " + res.status);
-    articoloCache = await res.json();
-    filtraArticoli(document.getElementById("searchInput").value);
-  } catch (e) {
-    console.error(e);
+    cacheArticoli = await res.json();
+    popolaFiltri();
+    applicaFiltri();
+  } catch (err) {
+    console.error("Errore caricamento articoli:", err);
   }
 }
 
-async function caricaAziende() {
+async function caricaMateriali() {
   try {
-    const res = await fetch("/api/aziende");
+    const res = await fetch("/api/materiali");
     if (!res.ok) throw new Error("HTTP " + res.status);
-    aziendeCache = await res.json();
-    const sel = document.getElementById("filtroAzienda");
-    sel.innerHTML = '<option value="">Tutte</option>';
-    aziendeCache.forEach((a) => {
-      const o = document.createElement("option");
-      o.value = a.brand;
-      o.textContent = a.brand;
-      sel.appendChild(o);
+    materialiDisponibili = await res.json();
+    creaRadioPill(
+      "filtroMateriali",
+      materialiDisponibili,
+      "materiali",
+      "checkbox"
+    );
+
+    document.getElementById("filtroMateriali")?.classList.remove("opacity-0");
+  } catch (err) {
+    console.error("Errore caricamento materiali:", err);
+  }
+}
+
+async function caricaFiniture() {
+  try {
+    const res = await fetch("/api/finiture");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const finiture = await res.json();
+
+    const select = document.getElementById("filtroFinitura");
+    select.innerHTML = '<option value="">Tutte</option>';
+
+    finiture.sort().forEach((f) => {
+      const opt = document.createElement("option");
+      opt.value = f;
+      opt.textContent = f;
+      select.appendChild(opt);
     });
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error("Errore caricamento finiture:", err);
   }
 }
 
-async function updateGalleria(idArticolo) {
-  const galleria = document.getElementById("galleria-foto");
-  galleria.innerHTML = "";
-  for (const f of FOTO_TIPI) {
-    const imgPath = `/api/articoli/${idArticolo}/foto/${f.chiave}`;
-    const div = document.createElement("div");
-    div.className = "cursor-pointer relative";
-    div.innerHTML = `
-      <img src="${imgPath}" alt="${f.label}" class="rounded w-full aspect-square object-cover transition hover:scale-105" onerror="this.style.display='none'"/>
-      <div class="absolute bottom-1 left-1 text-xs bg-black/60 text-white px-1 rounded">${f.label}</div>
-    `;
-    galleria.appendChild(div);
-  }
-}
+function popolaFiltri() {
+  const aziendeSet = new Set();
+  const statiSet = new Set();
+  const cittaSet = new Set();
+  const aziendeFormaSet = new Set();
+  mappaStatoCitta = {};
 
-function filtraArticoli(term) {
-  const lista = document.getElementById("lista-articoli");
-  lista.innerHTML = "";
-  const f = normalizza(term);
-  const azienda = document.getElementById("filtroAzienda")?.value || "";
-  const filtered = articoloCache.filter(
-    (a) =>
-      normalizza(a.nome).includes(f) &&
-      (!selectedTipo || a.tipo === selectedTipo) &&
-      (!azienda || a.brand_azienda === azienda)
-  );
-  if (!filtered.length) {
-    lista.innerHTML = "<p class='text-gray-400'>Nessun risultato</p>";
-    return;
-  }
-  filtered.forEach((a) => {
-    const d = document.createElement("div");
-    d.dataset.id = a.id;
-    d.className =
-      "p-3 bg-custom-800 rounded shadow hover:bg-custom-700 cursor-pointer";
-    d.innerHTML = `
-      <div class="flex justify-between text-white">
-        <span>${a.nome}</span>
-        ${a.brand_azienda ? `<span class="text-neutral-700">${a.brand_azienda}</span>` : ""}
-      </div>`;
-    lista.appendChild(d);
-  });
-  // Nascondi il bottone vedi dettagli
-  document.getElementById("vedi-dettagli-btn").style.display = "none";
-  articoloSelezionato = null;
-}
-
-async function mostraDettagliArticolo(id) {
-  let articolo = dettagliCache.get(id);
-  if (!articolo) {
-    try {
-      const res = await fetch(`/api/articoli/${id}`);
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      articolo = await res.json();
-      dettagliCache.set(id, articolo);
-    } catch (e) {
-      console.error(e);
-      return;
+  cacheArticoli.forEach((a) => {
+    if (a.azienda) aziendeSet.add(a.azienda);
+    if (a.stato_produzione) statiSet.add(a.stato_produzione);
+    if (a.citta_produzione) {
+      cittaSet.add(a.citta_produzione);
+      if (a.stato_produzione) {
+        if (!mappaStatoCitta[a.stato_produzione]) {
+          mappaStatoCitta[a.stato_produzione] = new Set();
+        }
+        mappaStatoCitta[a.stato_produzione].add(a.citta_produzione);
+      }
     }
-  }
-  // Mapping tra chiavi JS e id DOM
-  const mapping = {
-    nome: "dettagli-nome",
-    brand_azienda: "dettagli-brand",
-    nome_azienda: "dettagli-azienda",
-    tipo: "dettagli-tipo",
-    punta: "dettagli-punta",
-    tacco: "dettagli-tacco",
-    accessori: "dettagli-accessori",
-    altezza: "dettagli-altezza",
-    numero_pezzi: "dettagli-pezzi",
+    if (a.azienda_forma) aziendeFormaSet.add(a.azienda_forma);
+  });
+
+  const creaOpzioni = (select, valori) => {
+    select.innerHTML = '<option value="">Tutte</option>';
+    Array.from(valori)
+      .sort()
+      .forEach((val) => {
+        const opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = val;
+        select.appendChild(opt);
+      });
   };
-  Object.entries(mapping).forEach(([k, domId]) => {
-    const el = document.getElementById(domId);
-    if (el) el.textContent = articolo[k] ?? "-";
-  });
 
-  updateGalleria(articolo.id);
-  articoloSelezionato = articolo.id;
-  document.getElementById("vedi-dettagli-btn").style.display = "block";
+  creaOpzioni(document.getElementById("filtroAzienda"), aziendeSet);
+  creaOpzioni(document.getElementById("filtroStatoProduzione"), statiSet);
+  creaOpzioni(document.getElementById("filtroCittaProduzione"), cittaSet);
+  creaOpzioni(document.getElementById("filtroAziendaForma"), aziendeFormaSet);
 }
 
-document.querySelectorAll('input[name="filtroTipo"]').forEach((radio) => {
-  radio.addEventListener("click", function () {
-    if (selectedTipo === this.value) {
-      this.checked = false;
-      selectedTipo = null;
-    } else {
-      selectedTipo = this.value;
-    }
-    filtraArticoli(document.getElementById("searchInput").value);
+function aggiornaCittaDaStato(statoSelezionato) {
+  const selectCitta = document.getElementById("filtroCittaProduzione");
+  const valori = mappaStatoCitta[statoSelezionato] || new Set();
+
+  selectCitta.innerHTML = '<option value="">Tutte</option>';
+  Array.from(valori)
+    .sort()
+    .forEach((val) => {
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = val;
+      selectCitta.appendChild(opt);
+    });
+}
+
+function creaRadioPill(containerId, nomi, nomeFiltro, tipo = "radio") {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+
+  nomi.forEach((val) => {
+    const label = document.createElement("label");
+    label.className = "cursor-pointer";
+
+    const input = document.createElement("input");
+    input.type = tipo;
+    input.name = nomeFiltro;
+    input.value = val;
+    input.className = "peer hidden";
+
+    const pill = document.createElement("div");
+    pill.className =
+      "px-4 py-2 rounded-full border border-custom-950 bg-custom-900 text-neutral-600 peer-hover:text-white peer-checked:bg-custom-500 peer-checked:border-custom-500 peer-checked:text-white transition";
+    pill.textContent = val;
+
+if (tipo === "radio") {
+  let wasChecked = false;
+
+  input.addEventListener("pointerdown", () => {
+    wasChecked = input.checked;
   });
-});
+
+  input.addEventListener("click", (e) => {
+    if (wasChecked) {
+      e.preventDefault();
+      input.checked = false;
+    }
+  });
+}
+
+
+    input.addEventListener("change", applicaFiltri);
+    label.appendChild(input);
+    label.appendChild(pill);
+    container.appendChild(label);
+  });
+}
+
+function getFiltriCorrenti() {
+  return {
+    codice:
+      document.getElementById("filtroCodice")?.value.trim().toLowerCase() || "",
+    azienda: document.getElementById("filtroAzienda")?.value || "",
+    tipologia:
+      document.querySelector('input[name="tipologia"]:checked')?.value || "",
+    punta: document.querySelector('input[name="punta"]:checked')?.value || "",
+    materiali: Array.from(
+      document.querySelectorAll('input[name="materiali"]:checked')
+    ).map((e) => e.value),
+    altezza: parseInt(document.getElementById("filtroAltezza")?.value) || null,
+    finitura: document.getElementById("filtroFinitura")?.value || "",
+    matricola:
+      document
+        .getElementById("filtroMatricolaForma")
+        ?.value.trim()
+        .toLowerCase() || "",
+    aziendaForma: document.getElementById("filtroAziendaForma")?.value || "",
+    stato: document.getElementById("filtroStatoProduzione")?.value || "",
+    citta: document.getElementById("filtroCittaProduzione")?.value || "",
+  };
+}
+
+function applicaFiltri() {
+  const galleria = document.getElementById("galleria-articoli");
+  if (!galleria) return;
+
+  const f = getFiltriCorrenti();
+  const risultati = cacheArticoli.filter((a) => {
+    return (
+      (!f.codice || a.codice?.toLowerCase().includes(f.codice)) &&
+      (!f.azienda || a.azienda === f.azienda) &&
+      (!f.tipologia || a.tipologia === f.tipologia) &&
+      (!f.punta || a.punta === f.punta) &&
+      (!f.materiali.length ||
+        f.materiali.some((m) => a.materiali?.includes(m))) &&
+      (!f.altezza || a.altezza_tacco === f.altezza) &&
+      (!f.finitura || a.finitura === f.finitura) &&
+      (!f.matricola ||
+        a.matricola_forma?.toLowerCase().includes(f.matricola)) &&
+      (!f.aziendaForma || a.azienda_forma === f.aziendaForma) &&
+      (!f.stato || a.stato_produzione === f.stato) &&
+      (!f.citta || a.citta_produzione === f.citta)
+    );
+  });
+
+  galleria.innerHTML = risultati.length
+    ? risultati
+        .map((articolo) => {
+          const BASE_URL = "https://trentin-nas.synology.me";
+          return `<div class="bg-custom-800 rounded-xl shadow p-4 flex flex-col items-center text-center">
+          <img src="${BASE_URL}/immagini/articoli/${articolo.id}/foto-principale.jpg" alt="${articolo.codice}" onerror="this.src='../resources/img/placeholder.jpg'" class="w-full aspect-square object-cover rounded mb-2" />
+          <div class="text-white font-semibold">${articolo.codice}</div>
+        </div>`;
+        })
+        .join("")
+    : `<p class="text-gray-400 col-span-2">Nessun risultato trovato.</p>`;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-  document
-    .getElementById("searchInput")
-    ?.addEventListener("input", (e) => filtraArticoli(e.target.value));
-  document
-    .getElementById("refreshBtn")
-    ?.addEventListener("click", caricaArticoli);
-  document
-    .getElementById("filtroAzienda")
-    ?.addEventListener("change", () =>
-      filtraArticoli(document.getElementById("searchInput").value)
-    );
-  document.getElementById("lista-articoli")?.addEventListener("click", (e) => {
-    const item = e.target.closest("[data-id]");
-    if (item) mostraDettagliArticolo(item.dataset.id);
-  });
-  document.getElementById("toggleFiltri")?.addEventListener("click", () => {
-    const wrapper = document.getElementById("filtroWrapper"),
-      ic = document.getElementById("frecciaToggle");
-    filtriAperti = !filtriAperti;
-    ic.classList.toggle("rotate-180");
-    wrapper.style.maxHeight = filtriAperti
-      ? wrapper.scrollHeight + "px"
-      : "0px";
+  document.getElementById("refreshBtn")?.addEventListener("click", () => {
+    aggiornaCache();
+    caricaMateriali();
   });
 
-  // Vedi dettagli
-  document.getElementById("vedi-dettagli-btn").addEventListener("click", () => {
-    if (articoloSelezionato) {
-      window.location.href = `/dettagli.html?id=${articoloSelezionato}`;
-    }
-  });
-
-  caricaAziende();
   caricaArticoli();
+  caricaMateriali();
+  caricaFiniture();
+
+  creaRadioPill(
+    "filtroTipologia",
+    ["ceppo", "ceppo tacco", "zeppa"],
+    "tipologia"
+  );
+  creaRadioPill("filtroPunta", ["tonda", "punta", "quadra"], "punta");
+
+  [
+    "filtroCodice",
+    "filtroAzienda",
+    "filtroAltezza",
+    "filtroMatricolaForma",
+    "filtroAziendaForma",
+    "filtroStatoProduzione",
+    "filtroCittaProduzione",
+    "filtroFinitura",
+  ].forEach((id) => {
+    document.getElementById(id)?.addEventListener("input", applicaFiltri);
+    document.getElementById(id)?.addEventListener("change", applicaFiltri);
+  });
+
+  document
+    .getElementById("filtroStatoProduzione")
+    ?.addEventListener("change", (e) => {
+      aggiornaCittaDaStato(e.target.value);
+      applicaFiltri();
+    });
 });
