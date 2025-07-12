@@ -28,7 +28,7 @@ async function caricaFiniture() {
     const finiture = await res.json();
 
     const select = document.getElementById("filtroFinitura");
-    select.innerHTML = '<option value="">Tutte</option>';
+    select.innerHTML = '<option value=""></option>';
 
     finiture.sort().forEach((f) => {
       const opt = document.createElement("option");
@@ -127,6 +127,13 @@ async function caricaStatiECitta() {
       const cittaSelect = document.getElementById("filtroCittaProduzione");
       cittaSelect.innerHTML = "";
       const selected = selectStato.value;
+
+      //Aggiungi un'opzione vuota
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "";
+      cittaSelect.appendChild(opt);
+
       if (mappaStatoCitta[selected]) {
         Array.from(mappaStatoCitta[selected])
           .sort()
@@ -190,37 +197,49 @@ function setupDropzones() {
 
 // INVIO FORM
 async function inviaArticolo() {
-  const codice = document.getElementById("filtroCodice").value;
-  const azienda = document.getElementById("filtroAzienda").value;
-  const tipologia = document.querySelector(
-    'input[name="tipologia"]:checked'
-  )?.value;
-  const punta = document.querySelector('input[name="punta"]:checked')?.value;
-  const altezza = document.getElementById("filtroAltezza").value;
-  const matricola = document.getElementById("filtroMatricolaForma").value;
-  const aziendaForma = document.getElementById("filtroAziendaForma").value;
-  const stato = document.getElementById("filtroStatoProduzione").value;
-  const citta = document.getElementById("filtroCittaProduzione").value;
+  const codice = document.getElementById("filtroCodice").value.trim();
+  if (!codice) {
+    alert("Il campo CODICE è obbligatorio.");
+    return;
+  }
+
+  const tipologia =
+    document.querySelector('input[name="tipologia"]:checked')?.value || null;
+  const punta =
+    document.querySelector('input[name="punta"]:checked')?.value || null;
+  const altezza = parseInt(document.getElementById("filtroAltezza").value) || 0;
+  const azienda = document.getElementById("filtroAzienda").value || null;
+  const aziendaForma =
+    document.getElementById("filtroAziendaForma").value || null;
+  const finitura = document.getElementById("filtroFinitura").value || null;
+  const stato = document.getElementById("filtroStatoProduzione").value || null;
+  const citta = document.getElementById("filtroCittaProduzione").value || null;
+  const matricola =
+    document.getElementById("filtroMatricolaForma").value.trim() || null;
+  const accessorio =
+    document.getElementById("filtroAccessorio")?.value?.trim() || null;
 
   const materiali = Array.from(
     document.querySelectorAll('input[name="materiali"]:checked')
   ).map((el) => el.value);
 
-  if (!codice || !tipologia || !punta || !altezza) {
-    alert("Compila tutti i campi obbligatori.");
+  if (!immagini["principale"]) {
+    alert("La foto principale è obbligatoria.");
     return;
   }
 
   const formData = new FormData();
   formData.append("codice", codice);
-  formData.append("azienda", azienda);
-  formData.append("tipologia", tipologia);
-  formData.append("punta", punta);
+  if (tipologia) formData.append("tipologia", tipologia);
+  if (punta) formData.append("punta", punta);
   formData.append("altezza_tacco", altezza);
-  formData.append("matricola_forma", matricola);
-  formData.append("azienda_forma", aziendaForma);
-  formData.append("stato_produzione", stato);
-  formData.append("citta_produzione", citta);
+  if (azienda) formData.append("azienda", azienda);
+  if (aziendaForma) formData.append("azienda_forma", aziendaForma);
+  if (finitura) formData.append("finitura", finitura);
+  if (stato) formData.append("stato_produzione", stato);
+  if (citta) formData.append("citta_produzione", citta);
+  if (matricola) formData.append("matricola_forma", matricola);
+  if (accessorio) formData.append("accessorio", accessorio);
   materiali.forEach((m) => formData.append("materiali[]", m));
 
   for (const tipo in immagini) {

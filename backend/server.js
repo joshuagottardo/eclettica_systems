@@ -45,7 +45,7 @@ app.get("/api/articoli", async (req, res) => {
         a.altezza_tacco,
         a.numero_pezzi,
         a.accessorio,
-        a.forma_matricola,
+        a.forma_matricola AS matricola_forma,
         a.forma_id_azienda,
         az2.nome AS azienda_forma,
         f.nome AS finitura,
@@ -64,9 +64,7 @@ app.get("/api/articoli", async (req, res) => {
     for (const row of rows) {
       try {
         // Converte la stringa "materiali" in array, oppure [] se null/vuoto
-        row.materiali = row.materiali
-          ? row.materiali.split(",")
-          : [];
+        row.materiali = row.materiali ? row.materiali.split(",") : [];
         articoliValidi.push(ArticoloSchema.parse(row));
       } catch (err) {
         console.error("Errore di validazione articolo:", {
@@ -81,7 +79,6 @@ app.get("/api/articoli", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
   const { id, tipo } = req.params;
@@ -104,23 +101,22 @@ app.get("/api/materiali", async (req, res) => {
     const [rows] = await pool.query(
       "SELECT nome FROM materiale_base ORDER BY nome ASC"
     );
-    const nomiMateriali = rows.map(row => row.nome);
+    const nomiMateriali = rows.map((row) => row.nome);
     res.json(nomiMateriali);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-app.get('/api/finiture', async (req, res) => {
+app.get("/api/finiture", async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT nome FROM finitura');
-    const finiture = rows.map(row => row.nome);
+    const [rows] = await pool.query("SELECT nome FROM finitura");
+    const finiture = rows.map((row) => row.nome);
     res.json(finiture);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // Select all companies from the 'azienda' table
 app.get("/api/aziende", async (req, res) => {
@@ -174,85 +170,119 @@ app.get("/api/articoli/:id", async (req, res) => {
 app.post("/api/articoli", upload.any(), async (req, res) => {
   try {
     const {
-      nome,
-      tipo,
-      numero_pezzi,
-      altezza,
+      codice,
+      tipologia,
       punta,
-      tacco,
-      accessori,
+      altezza_tacco,
+      accessorio,
+      matricola_forma,
       azienda,
+      azienda_forma,
+      stato_produzione,
+      citta_produzione,
+      finitura,
     } = req.body;
 
-    const materiali = req.body["materiali[]"]
-      ? Array.isArray(req.body["materiali[]"])
-        ? req.body["materiali[]"]
-        : [req.body["materiali[]"]]
-      : [];
+    const materialiRaw = req.body["materiali[]"] || req.body.materiali || [];
+    const materiali = Array.isArray(materialiRaw)
+      ? materialiRaw
+      : [materialiRaw];
 
-    // Validazione base
-    if (!nome) {
-      return res.status(400).json({ error: "Dati obbligatori mancanti" });
+    console.log("BODY completo:", req.body);
+    console.log("Materiali (raw):", req.body["materiali[]"]);
+    console.log("Materiali interpretati:", materiali);
+
+    console.log("test");
+
+    // ✅ Validazione obbligatori
+    if (!codice) {
+      return res.status(400).json({ error: "Il campo CODICE è obbligatorio." });
     }
 
-    // Cast
-    const nomeVal = nome?.trim();
-    const tipoVal = tipo?.trim() || null;
-    const numeroPezziVal =
-      numero_pezzi && !isNaN(parseInt(numero_pezzi))
-        ? parseInt(numero_pezzi)
-        : null;
-    const altezzaVal =
-      altezza && !isNaN(parseInt(altezza)) ? parseInt(altezza) : null;
+    const hasFotoPrincipale = req.files.some(
+      (file) => file.fieldname === "immagine_principale"
+    );
+    if (!hasFotoPrincipale) {
+      return res
+        .status(400)
+        .json({ error: "La foto principale è obbligatoria." });
+    }
+
+    // Lookup ID finitura (può anche essere null)
+    let id_finitura = null;
+    if (finitura) {
+      const [rows] = await pool.query(
+        "SELECT id FROM finitura WHERE nome = ? LIMIT 1",
+        [finitura]
+      );
+      id_finitura = rows.length ? rows[0].id : null;
+    }
+
+    // Cast e pulizia dati
+    const codiceVal = codice.trim();
+    const tipologiaVal = tipologia?.trim() || null;
     const puntaVal = punta?.trim() || null;
-    const taccoVal = tacco?.trim() || null;
-    const accessoriVal = accessori?.trim() || null;
-    const aziendaVal =
-      azienda && !isNaN(parseInt(azienda)) ? parseInt(azienda) : null;
+    const altezzaVal =
+      altezza_tacco && !isNaN(parseInt(altezza_tacco))
+        ? parseInt(altezza_tacco)
+        : 0;
+    const accessorioVal = accessorio?.trim() || null;
+    const matricolaVal = matricola_forma?.trim() || null;
+    const aziendaVal = azienda ? parseInt(azienda) : null;
+    const aziendaFormaVal = azienda_forma ? parseInt(azienda_forma) : null;
+    const statoVal = stato_produzione?.trim() || null;
+    const cittaVal = citta_produzione?.trim() || null;
 
     // Inserimento articolo
     const [result] = await pool.query(
       `
-  INSERT INTO articolo
-  (nome, tipo, numero_pezzi, altezza, punta, tacco, accessori, id_azienda)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `,
+      INSERT INTO articolo
+      (codice, tipologia, punta, altezza_tacco, accessorio, forma_matricola, id_azienda, forma_id_azienda, stato_produzione, citta_produzione, id_finitura)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
       [
-        nomeVal,
-        tipoVal,
-        numeroPezziVal,
-        altezzaVal,
+        codiceVal,
+        tipologiaVal,
         puntaVal,
-        taccoVal,
-        accessoriVal,
+        altezzaVal,
+        accessorioVal,
+        matricolaVal,
         aziendaVal,
+        aziendaFormaVal,
+        statoVal,
+        cittaVal,
+        id_finitura,
       ]
     );
 
     const id_articolo = result.insertId;
 
-    // Inserimento materiali nella tabella ponte
-    for (const id_materiale of materiali) {
-      const materialeInt = parseInt(id_materiale, 10);
-      await pool.query(
-        `INSERT INTO articolo_materiale (id_articolo, id_materiale) VALUES (?, ?)`,
-        [id_articolo, materialeInt]
+    // Inserimento materiali
+    for (const nome_materiale of materiali) {
+      const [rows] = await pool.query(
+        "SELECT id FROM materiale_base WHERE nome = ? LIMIT 1",
+        [nome_materiale]
       );
+      console.log("test");
+      if (rows.length) {
+        await pool.query(
+          `INSERT INTO articolo_materiale (id_articolo, id_materiale) VALUES (?, ?)`,
+          [id_articolo, rows[0].id]
+        );
+      }
     }
 
-    // Cartella immagine
+    // Salvataggio immagini convertite in JPEG
     const dir = path.join(ARTICOLI_DIR, id_articolo.toString());
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    // Salvataggio immagini
     for (const file of req.files) {
       const match = file.fieldname.match(/^immagine_(.+)$/);
       if (!match) continue;
-      const tipo = match[1]; // es. "principale", "esterno", ecc.
+      const tipo = match[1];
       const outputPath = path.join(dir, `${tipo}.jpg`);
-
       await sharp(file.buffer).jpeg({ quality: 85 }).toFile(outputPath);
     }
 

@@ -12,11 +12,18 @@ async function caricaArticoli() {
     const res = await fetch("/api/articoli");
     if (!res.ok) throw new Error("HTTP " + res.status);
     cacheArticoli = await res.json();
+
+    sessionStorage.setItem("cacheArticoli", JSON.stringify(cacheArticoli));
     popolaFiltri();
     applicaFiltri();
   } catch (err) {
     console.error("Errore caricamento articoli:", err);
   }
+}
+
+function apriDettaglio(id) {
+  sessionStorage.setItem("articoloId", id);
+  window.location.href = "/dettagli.html";
 }
 
 async function caricaMateriali() {
@@ -195,7 +202,7 @@ function applicaFiltri() {
       (!f.tipologia || a.tipologia === f.tipologia) &&
       (!f.punta || a.punta === f.punta) &&
       (!f.materiali.length ||
-        f.materiali.some((m) => a.materiali?.includes(m))) &&
+        f.materiali.every((m) => a.materiali?.includes(m))) &&
       (!f.altezza || a.altezza_tacco === f.altezza) &&
       (!f.finitura || a.finitura === f.finitura) &&
       (!f.matricola ||
@@ -210,9 +217,9 @@ function applicaFiltri() {
     ? risultati
         .map((articolo) => {
           const BASE_URL = "https://trentin-nas.synology.me";
-          return `<div class="bg-custom-800 rounded-xl shadow p-4 flex flex-col items-center text-center">
-          <img src="${BASE_URL}/immagini/articoli/${articolo.id}/foto-principale.jpg" alt="${articolo.codice}" onerror="this.src='../resources/img/placeholder.jpg'" class="w-full aspect-square object-cover rounded mb-2" />
-          <div class="text-white font-semibold">${articolo.codice}</div>
+          return `<div onclick="apriDettaglio(${articolo.id})" class="cursor-pointer bg-custom-800 rounded-xl shadow p-4 flex flex-col items-center text-center">
+          <img src="${BASE_URL}/immagini/articoli/${articolo.id}/principale.jpg" alt="${articolo.codice}" onerror="this.src='../resources/img/placeholder.jpg'" class="w-full aspect-square object-cover rounded mb-2" />
+          
         </div>`;
         })
         .join("")
@@ -256,4 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
       aggiornaCittaDaStato(e.target.value);
       applicaFiltri();
     });
+
+  window.apriDettaglio = function (id) {
+    sessionStorage.setItem("articoloId", id);
+    window.location.href = "/dettagli.html";
+  };
 });
