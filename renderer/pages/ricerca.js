@@ -131,23 +131,28 @@ function creaRadioPill(containerId, nomi, nomeFiltro, tipo = "radio") {
       "px-4 py-2 rounded-full border border-custom-950 bg-custom-900 text-neutral-600 peer-hover:text-white peer-checked:bg-custom-500 peer-checked:border-custom-500 peer-checked:text-white transition";
     pill.textContent = val;
 
-if (tipo === "radio") {
-  let wasChecked = false;
+    if (tipo === "radio") {
+      let wasChecked = false;
 
-  input.addEventListener("pointerdown", () => {
-    wasChecked = input.checked;
-  });
+      label.addEventListener("pointerdown", () => {
+        wasChecked = input.checked;
+      });
 
-  input.addEventListener("click", (e) => {
-    if (wasChecked) {
-      e.preventDefault();
-      input.checked = false;
+      label.addEventListener("click", (e) => {
+        if (wasChecked) {
+          e.preventDefault();
+          input.checked = false;
+
+          // 🔥 Trigger manuale dell'evento change
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
     }
-  });
-}
 
+    input.addEventListener("change", () => {
+      applicaFiltri(); // aggiornamento automatico dei filtri
+    });
 
-    input.addEventListener("change", applicaFiltri);
     label.appendChild(input);
     label.appendChild(pill);
     container.appendChild(label);

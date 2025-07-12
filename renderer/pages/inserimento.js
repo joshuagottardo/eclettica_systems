@@ -7,7 +7,12 @@ async function caricaMateriali() {
     const res = await fetch("/api/materiali");
     if (!res.ok) throw new Error("HTTP " + res.status);
     materialiDisponibili = await res.json();
-    creaRadioPill("filtroMateriali", materialiDisponibili, "materiali", "checkbox");
+    creaRadioPill(
+      "filtroMateriali",
+      materialiDisponibili,
+      "materiali",
+      "checkbox"
+    );
 
     const container = document.getElementById("filtroMateriali");
     container.classList.remove("opacity-0");
@@ -57,18 +62,18 @@ function creaRadioPill(containerId, nomi, nomeFiltro, tipo = "radio") {
 
     if (tipo === "radio") {
       let wasChecked = false;
-      input.addEventListener("mousedown", () => {
+
+      label.addEventListener("pointerdown", () => {
         wasChecked = input.checked;
       });
 
-      input.addEventListener("click", (e) => {
+      label.addEventListener("click", (e) => {
         if (wasChecked) {
           e.preventDefault();
           input.checked = false;
         }
       });
     }
-
     label.appendChild(input);
     label.appendChild(pill);
     container.appendChild(label);
@@ -81,8 +86,8 @@ async function caricaAziende() {
     const aziende = await res.json();
     const selectAzienda = document.getElementById("filtroAzienda");
     const selectAziendaForma = document.getElementById("filtroAziendaForma");
-    [selectAzienda, selectAziendaForma].forEach(select => {
-      aziende.forEach(a => {
+    [selectAzienda, selectAziendaForma].forEach((select) => {
+      aziende.forEach((a) => {
         const opt = document.createElement("option");
         opt.value = a.id;
         opt.textContent = a.brand;
@@ -123,12 +128,14 @@ async function caricaStatiECitta() {
       cittaSelect.innerHTML = "";
       const selected = selectStato.value;
       if (mappaStatoCitta[selected]) {
-        Array.from(mappaStatoCitta[selected]).sort().forEach((c) => {
-          const opt = document.createElement("option");
-          opt.value = c;
-          opt.textContent = c;
-          cittaSelect.appendChild(opt);
-        });
+        Array.from(mappaStatoCitta[selected])
+          .sort()
+          .forEach((c) => {
+            const opt = document.createElement("option");
+            opt.value = c;
+            opt.textContent = c;
+            cittaSelect.appendChild(opt);
+          });
       }
     });
   } catch (err) {
@@ -185,7 +192,9 @@ function setupDropzones() {
 async function inviaArticolo() {
   const codice = document.getElementById("filtroCodice").value;
   const azienda = document.getElementById("filtroAzienda").value;
-  const tipologia = document.querySelector('input[name="tipologia"]:checked')?.value;
+  const tipologia = document.querySelector(
+    'input[name="tipologia"]:checked'
+  )?.value;
   const punta = document.querySelector('input[name="punta"]:checked')?.value;
   const altezza = document.getElementById("filtroAltezza").value;
   const matricola = document.getElementById("filtroMatricolaForma").value;
@@ -193,7 +202,9 @@ async function inviaArticolo() {
   const stato = document.getElementById("filtroStatoProduzione").value;
   const citta = document.getElementById("filtroCittaProduzione").value;
 
-  const materiali = Array.from(document.querySelectorAll('input[name="materiali"]:checked')).map((el) => el.value);
+  const materiali = Array.from(
+    document.querySelectorAll('input[name="materiali"]:checked')
+  ).map((el) => el.value);
 
   if (!codice || !tipologia || !punta || !altezza) {
     alert("Compila tutti i campi obbligatori.");
@@ -237,7 +248,11 @@ async function inviaArticolo() {
 
 // SETUP INIZIALE
 document.addEventListener("DOMContentLoaded", () => {
-  creaRadioPill("filtroTipologia", ["ceppo", "ceppo tacco", "zeppa"], "tipologia");
+  creaRadioPill(
+    "filtroTipologia",
+    ["ceppo", "ceppo tacco", "zeppa"],
+    "tipologia"
+  );
   creaRadioPill("filtroPunta", ["tonda", "punta", "quadra"], "punta");
   caricaAziende();
   caricaStatiECitta();
@@ -245,5 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
   caricaFiniture();
   setupDropzones();
 
-  document.querySelector("button[type='submit']")?.addEventListener("click", inviaArticolo);
+  document
+    .querySelector("button[type='submit']")
+    ?.addEventListener("click", inviaArticolo);
 });
