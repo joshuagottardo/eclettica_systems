@@ -37,7 +37,7 @@
         <div class="bg-custom-800 rounded rounded-lg p-6">
           <div class="flex gap-4">
             <div class="w-1/2">
-              <label class="block mb-1">Codice</label>
+              <label class="block mb-1">Articolo</label>
               <input
                 class="w-full bg-custom-900 text-white border border-red-800 rounded p-2 placeholder-custom-100"
                 id="filtroCodice"
@@ -49,6 +49,42 @@
               <select
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
                 id="filtroAzienda">
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
+          <div class="flex gap-4 mt-6">
+            <div class="w-1/2">
+              <label class="block mb-3 flex items-center justify-between">
+                <span>Luogo produzione</span>
+                <button
+                  id="btnAggiungiStato"
+                  type="button"
+                  class="text-neutral-500 text-xl font-bold px-2">
+                  +
+                </button>
+              </label>
+
+              <select
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
+                id="filtroStatoProduzione">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-3 flex items-center justify-between">
+                <span>Città produzione</span>
+                <button
+                  id="btnAggiungiCitta"
+                  type="button"
+                  class="text-neutral-500 text-xl font-bold px-2">
+                  +
+                </button>
+              </label>
+
+              <select
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
+                id="filtroCittaProduzione">
                 <option value=""></option>
               </select>
             </div>
@@ -105,46 +141,10 @@
                 type="text" />
             </div>
             <div class="w-1/2">
-              <label class="block mb-3">Azienda</label>
+              <label class="block mb-3">Formificio</label>
               <select
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
                 id="filtroAziendaForma">
-                <option value=""></option>
-              </select>
-            </div>
-          </div>
-          <div class="flex gap-4 mt-6">
-            <div class="w-1/2">
-              <label class="block mb-3 flex items-center justify-between">
-                <span>Stato produzione</span>
-                <button
-                  id="btnAggiungiStato"
-                  type="button"
-                  class="text-neutral-500 text-xl font-bold px-2">
-                  +
-                </button>
-              </label>
-
-              <select
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
-                id="filtroStatoProduzione">
-                <option value=""></option>
-              </select>
-            </div>
-            <div class="w-1/2">
-              <label class="block mb-3 flex items-center justify-between">
-                <span>Città produzione</span>
-                <button
-                  id="btnAggiungiCitta"
-                  type="button"
-                  class="text-neutral-500 text-xl font-bold px-2">
-                  +
-                </button>
-              </label>
-
-              <select
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
-                id="filtroCittaProduzione">
                 <option value=""></option>
               </select>
             </div>

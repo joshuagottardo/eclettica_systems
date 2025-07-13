@@ -11,7 +11,7 @@
     class="ricerca min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
-      <!-- Sinistra: Freccia indietro -->
+      <!-- Sinistra -->
       <a
         class="text-gray-100 hover:text-custom-100 transition text-2xl flex items-center"
         href="javascript:history.back()"
@@ -29,7 +29,7 @@
             stroke-width="2"></path>
         </svg>
       </a>
-      <!-- Destra: Ricerca e Nuovo articolo con testo sotto -->
+      <!-- Destra-->
       <button
         id="refreshBtn"
         title="Aggiorna cache"
@@ -55,7 +55,7 @@
         <div class="bg-custom-800 rounded rounded-lg p-6">
           <div class="flex gap-4">
             <div class="w-1/2">
-              <label class="block mb-1">Codice</label>
+              <label class="block mb-1">Articolo</label>
               <input
                 id="filtroCodice"
                 type="text"
@@ -67,6 +67,20 @@
               <label class="block mb-2">Azienda</label>
               <select
                 id="filtroAzienda"
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+            </div>
+          </div>
+                    <div class="flex gap-4 mt-6">
+            <div class="w-1/2">
+              <label class="block mb-3">Stato produzione</label>
+              <select
+                id="filtroStatoProduzione"
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-3">Città produzione</label>
+              <select
+                id="filtroCittaProduzione"
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
             </div>
           </div>
@@ -131,24 +145,9 @@
             </div>
 
             <div class="w-1/2">
-              <label class="block mb-3">Azienda</label>
+              <label class="block mb-3">Formificio</label>
               <select
                 id="filtroAziendaForma"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
-            </div>
-          </div>
-
-          <div class="flex gap-4 mt-6">
-            <div class="w-1/2">
-              <label class="block mb-3">Stato produzione</label>
-              <select
-                id="filtroStatoProduzione"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
-            </div>
-            <div class="w-1/2">
-              <label class="block mb-3">Città produzione</label>
-              <select
-                id="filtroCittaProduzione"
                 class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
             </div>
           </div>

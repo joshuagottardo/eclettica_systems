@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ["ceppo", "ceppo tacco", "zeppa"],
     "tipologia"
   );
-  creaRadioPill("filtroPunta", ["tonda", "punta", "quadra"], "punta");
+  creaRadioPill("filtroPunta", ["tonda", "sfilata", "quadra"], "punta");
 
   [
     "filtroCodice",
