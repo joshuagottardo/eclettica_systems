@@ -223,6 +223,8 @@ async function inviaArticolo() {
     document.querySelectorAll('input[name="materiali"]:checked')
   ).map((el) => el.value);
 
+  const in_serie = document.getElementById("inSerieCheckbox").checked ? 1 : 0;
+
   if (!immagini["principale"]) {
     alert("La foto principale è obbligatoria.");
     return;
@@ -240,6 +242,7 @@ async function inviaArticolo() {
   if (citta) formData.append("citta_produzione", citta);
   if (matricola) formData.append("matricola_forma", matricola);
   if (accessorio) formData.append("accessorio", accessorio);
+  formData.append("in_serie", in_serie);
   materiali.forEach((m) => formData.append("materiali[]", m));
 
   for (const tipo in immagini) {
@@ -254,7 +257,7 @@ async function inviaArticolo() {
     const data = await res.json();
     if (data.success) {
       alert("Articolo inserito correttamente!");
-      window.location.href = "/ricerca.html";
+      window.location.href = "inserimento.html";
     } else {
       alert("Errore nell'inserimento.");
       console.error(data);

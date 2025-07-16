@@ -20,5 +20,9 @@ export const ArticoloSchema = z.object({
   forma_id_azienda: z.number().nullable().optional(),
   azienda_forma: z.string().nullable().optional(),
   materiali: z.array(z.string()).nullable().optional(),
-  finitura: z.string().nullable().optional()
+  finitura: z.string().nullable().optional(),
+  in_serie: z.preprocess((val) => {
+    if (val === "1" || val === 1 || val === true) return 1;
+    return 0;
+  }, z.number().int()),
 });

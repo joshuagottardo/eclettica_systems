@@ -45,6 +45,7 @@ app.get("/api/articoli", async (req, res) => {
         a.altezza_tacco,
         a.numero_pezzi,
         a.accessorio,
+        a.serie AS in_serie,
         a.forma_matricola AS matricola_forma,
         a.forma_id_azienda,
         az2.nome AS azienda_forma,
@@ -79,6 +80,20 @@ app.get("/api/articoli", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.delete('/api/articoli/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await pool.query('DELETE FROM articolo WHERE id = ?', [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Articolo non trovato' });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
   const { id, tipo } = req.params;
@@ -181,6 +196,7 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
       stato_produzione,
       citta_produzione,
       finitura,
+      in_serie,
     } = req.body;
 
     const materialiRaw = req.body["materiali[]"] || req.body.materiali || [];
@@ -231,8 +247,8 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
     const [result] = await pool.query(
       `
       INSERT INTO articolo
-      (codice, tipologia, punta, altezza_tacco, accessorio, forma_matricola, id_azienda, forma_id_azienda, stato_produzione, citta_produzione, id_finitura)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (codice, tipologia, punta, altezza_tacco, accessorio, forma_matricola, id_azienda, forma_id_azienda, stato_produzione, citta_produzione, id_finitura, serie)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         codiceVal,
@@ -246,6 +262,7 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
         statoVal,
         cittaVal,
         id_finitura,
+        in_serie
       ]
     );
 

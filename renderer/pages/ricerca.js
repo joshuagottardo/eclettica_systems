@@ -187,6 +187,7 @@ function getFiltriCorrenti() {
     aziendaForma: document.getElementById("filtroAziendaForma")?.value || "",
     stato: document.getElementById("filtroStatoProduzione")?.value || "",
     citta: document.getElementById("filtroCittaProduzione")?.value || "",
+    inSerie: document.getElementById("filtroInSerie")?.checked || false, // 👈 AGGIUNTA
   };
 }
 
@@ -209,7 +210,8 @@ function applicaFiltri() {
         a.matricola_forma?.toLowerCase().includes(f.matricola)) &&
       (!f.aziendaForma || a.azienda_forma === f.aziendaForma) &&
       (!f.stato || a.stato_produzione === f.stato) &&
-      (!f.citta || a.citta_produzione === f.citta)
+      (!f.citta || a.citta_produzione === f.citta) &&
+      (!f.inSerie || a.in_serie === 1)
     );
   });
 
@@ -252,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "filtroStatoProduzione",
     "filtroCittaProduzione",
     "filtroFinitura",
+    "filtroInSerie",
   ].forEach((id) => {
     document.getElementById(id)?.addEventListener("input", applicaFiltri);
     document.getElementById(id)?.addEventListener("change", applicaFiltri);

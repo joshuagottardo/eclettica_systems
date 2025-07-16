@@ -16,12 +16,20 @@ export const utenti = [
 ];
 
 export const categorie = [
-  { nome: "accessori", icona: "diamond" },
-  { nome: "aziende", icona: "domain" },
-  { nome: "ceppi", icona: "steps" },
-  { nome: "materiali", icona: "texture" },
-  { nome: "persone", icona: "account_box" },
-  { nome: "showroom", icona: "real_estate_agent" },
+  { nome: "fondi", icona: "sole", enabled: false },
+  { nome: "tacchi", icona: "heel", enabled: false },
+  { nome: "ceppi", icona: "shoe-base", enabled: true },
+  { nome: "materiali", icona: "material", enabled: false },
+  { nome: "accessori", icona: "accessory", enabled: false },
+
+  { nome: "lab prototipia", icona: "prototype", enabled: false },
+  { nome: "lab 3d", icona: "threeD", enabled: false },
+
+  { nome: "aziende", icona: "company", enabled: false },
+  { nome: "persone", icona: "contacts", enabled: false },
+  { nome: "archivio calzature", icona: "main-archive", enabled: false },
+  { nome: "archivio disegno", icona: "drawings-archive", enabled: false },
+  { nome: "archivio storico", icona: "archive", enabled: false },
 ];
 
 export const menu_ceppi = [

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ECLETTICA ACCESSORI</title>
+    <title>ECLETTICA SYSTEM</title>
     <link href="../style.css" rel="stylesheet" />
     <script src="../pages/inserimento.js" type="module"></script>
   </head>
@@ -39,7 +39,7 @@
             <div class="w-1/2">
               <label class="block mb-1">Articolo</label>
               <input
-                class="w-full bg-custom-900 text-white border border-red-800 rounded p-2 placeholder-custom-100"
+                class="w-full bg-custom-900 text-white border border-red-900 rounded p-2 placeholder-custom-100"
                 id="filtroCodice"
                 placeholder=""
                 type="text" />
@@ -88,6 +88,17 @@
                 <option value=""></option>
               </select>
             </div>
+          </div>
+          <div class="mt-6">
+            <label
+              for="inSerieCheckbox"
+              class="inline-flex items-center gap-2 text-white text-base">
+              Articolo in serie?
+              <input
+                id="inSerieCheckbox"
+                type="checkbox"
+                class="accent-custom-500 w-5 h-5" />
+            </label>
           </div>
         </div>
         <div class="bg-custom-800 rounded rounded-lg p-6">

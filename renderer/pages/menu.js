@@ -12,7 +12,7 @@ const menu = mappa[categoria] || [];
 menu.forEach((item) => {
   const div = document.createElement("div");
   div.className =
-    "h-32 p-6 bg-custom-700 rounded-xl shadow hover:bg-custom-500 transition cursor-pointer flex flex-col items-center justify-center";
+    "h-36 p-3 pl-6 pr-6 bg-custom-700 rounded-xl shadow hover:bg-custom-500 transition cursor-pointer flex flex-col items-center justify-center";
   div.innerHTML = `
     <span class="material-symbols-outlined text-4xl mb-5 block">${
       item.icona
@@ -24,10 +24,10 @@ menu.forEach((item) => {
     div.classList.add("fade-out");
     setTimeout(() => {
       window.location.href = item.url;
-    }, 500);
+    }, 400);
   });
 
-  div.classList.add("fade-in");
+  div.classList.add("fade-in-6");
 
   container.appendChild(div);
 });
