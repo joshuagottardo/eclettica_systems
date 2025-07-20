@@ -81,19 +81,20 @@ app.get("/api/articoli", async (req, res) => {
   }
 });
 
-app.delete('/api/articoli/:id', async (req, res) => {
+app.delete("/api/articoli/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const [result] = await pool.query('DELETE FROM articolo WHERE id = ?', [id]);
+    const [result] = await pool.query("DELETE FROM articolo WHERE id = ?", [
+      id,
+    ]);
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Articolo non trovato' });
+      return res.status(404).json({ error: "Articolo non trovato" });
     }
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
   const { id, tipo } = req.params;
@@ -262,7 +263,7 @@ app.post("/api/articoli", upload.any(), async (req, res) => {
         statoVal,
         cittaVal,
         id_finitura,
-        in_serie
+        in_serie,
       ]
     );
 
@@ -338,6 +339,43 @@ app.post("/api/citta", async (req, res) => {
   }
 
   res.json({ success: true });
+});
+
+app.get("/api/utenti", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, nome FROM utente"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Errore nel recupero degli utenti" });
+  }
+});
+
+app.post("/api/verifica-password", async (req, res) => {
+  const { id, password } = req.body;
+
+  if (!id || !password) {
+    return res.status(400).json({ error: "ID e password sono obbligatori" });
+  }
+
+  try {
+    const [rows] = await pool.query(
+      "SELECT password FROM utente WHERE id = ?",
+      [id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ valida: false });
+    }
+
+    const passwordCorretta = rows[0].password === password;
+    res.json({ valida: passwordCorretta });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Errore nella verifica della password" });
+  }
 });
 
 app.listen(PORT, () =>

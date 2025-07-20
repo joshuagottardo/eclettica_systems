@@ -1,7 +1,6 @@
-import { utenti } from "./globals.js";
+let utenti = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const audio = new Audio("resources/audio/benvenuti.mp3");
   audio.play().catch((err) => {
     console.warn("Errore nel riprodurre l'audio benvenuto:", err);
@@ -9,20 +8,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const grid = document.getElementById("utenti-grid");
 
-  audio.addEventListener("ended", () => {
-    document.getElementById("intro").classList.add("translate-up-100");
+  recuperaUtenti().then(() => {
+    audio.addEventListener("ended", () => {
+      document.getElementById("intro").classList.add("translate-up-100");
 
-    utenti.forEach((nome, index) => {
-      const div = document.createElement("div");
-      div.className =
-        "utente-item bg-custom-700 text-white text-m p-5 rounded text-center cursor-pointer opacity-0 scale-95 transition duration-500 ease-out";
-      div.textContent = nome.toUpperCase();
-      div.dataset.nome = nome;
-      grid.appendChild(div);
+      utenti.forEach((utente, index) => {
+        const div = document.createElement("div");
+        div.className =
+          "utente-item bg-custom-700 text-white text-m p-5 rounded text-center cursor-pointer opacity-0 scale-95 transition duration-500 ease-out";
+        div.textContent = utente.nome.toUpperCase();
+        div.dataset.nome = utente.nome;
+        div.dataset.id = utente.id;
+        grid.appendChild(div);
 
-      setTimeout(() => {
-        div.classList.add("fade-in");
-      }, index * 100);
+        setTimeout(() => {
+          div.classList.add("fade-in");
+        }, index * 100);
+      });
     });
   });
 
@@ -34,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const benvenuto = document.getElementById("benvenuto");
     const gridUtenti = document.getElementById("utenti-grid");
     const loginBox = document.getElementById("login-box");
+    loginBox.dataset.id = div.dataset.id;
     const saluto = document.getElementById("saluto");
 
     benvenuto.classList.add("fade-out");
@@ -67,7 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     audioUser.addEventListener("ended", () => {
       const passwordInput = document.getElementById("password");
-      const loginBtn = document.querySelector('#login-form button[type="submit"]');
+      const loginBtn = document.querySelector(
+        '#login-form button[type="submit"]'
+      );
       const cambiaUtenteBtn = document.getElementById("cambia-utente");
 
       // Mostra form solo dopo la transizione del saluto
@@ -89,17 +94,27 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const loginBox = document.getElementById("login-box");
     const nome = loginBox.dataset.nome;
+    const id = parseInt(loginBox.dataset.id, 10);
     const password = document.getElementById("password").value;
 
-    if (password.toLowerCase() === nome.toLowerCase()) {
-      sessionStorage.setItem("utente_loggato", nome);
-      document.body.classList.add("fade-out");
-      setTimeout(() => {
-        window.location.href = "/categorie.html";
-      }, 500);
-    } else {
-      alert("Password errata");
+    console.log("Ricevuto:", { id, password });
+
+    if (isNaN(id)) {
+      alert("Errore interno: ID utente non valido");
+      return;
     }
+
+    verificaPassword(id, password).then((valida) => {
+      if (valida) {
+        sessionStorage.setItem("utente_id", id);
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+          window.location.href = "/categorie.html";
+        }, 500);
+      } else {
+        alert("Password errata");
+      }
+    });
   });
 });
 
@@ -137,3 +152,31 @@ document.getElementById("cambia-utente").addEventListener("click", () => {
     document.getElementById("password").value = "";
   }, 300);
 });
+
+async function recuperaUtenti() {
+  try {
+    const res = await fetch("/api/utenti");
+    utenti = await res.json(); // [{ id, nome }]
+  } catch (err) {
+    console.error("Errore nel recuperare utenti dal server:", err);
+    return;
+  }
+}
+
+async function verificaPassword(id, password) {
+  try {
+    const res = await fetch("/api/verifica-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, password }),
+    });
+
+    if (!res.ok) return false;
+
+    const data = await res.json();
+    return data.valida === true;
+  } catch (err) {
+    console.error("Errore durante la verifica della password:", err);
+    return false;
+  }
+}

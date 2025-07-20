@@ -9,7 +9,6 @@ export const utenti = [
   "elena",
   "marianna",
   "martina",
-  "paola",
   "paolo",
   "vera",
   "admin",
