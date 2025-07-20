@@ -14,21 +14,23 @@ export const utenti = [
   "admin",
 ];
 
-export const categorie = [
-  { nome: "fondi", icona: "sole", enabled: false },
-  { nome: "tacchi", icona: "heel", enabled: false },
-  { nome: "ceppi", icona: "shoe-base", enabled: true },
-  { nome: "materiali", icona: "material", enabled: false },
-  { nome: "accessori", icona: "accessory", enabled: false },
+export const aree_di_lavoro = [
+  { nome: "fondi", icona: "sole", enabled: false, categoria:"1" },
+  { nome: "tacchi", icona: "heel", enabled: false, categoria:"1" },
+  { nome: "ceppi", icona: "shoe-base", enabled: true, categoria:"1" },
+  { nome: "materiali", icona: "material", enabled: false, categoria:"1" },
+  { nome: "accessori", icona: "accessory", enabled: false, categoria:"1" },
 
-  { nome: "lab prototipia", icona: "prototype", enabled: false },
-  { nome: "lab 3d", icona: "threeD", enabled: false },
+  { nome: "lab prototipia", icona: "prototype", enabled: false, categoria:"2" },
+  { nome: "lab 3d", icona: "threeD", enabled: false, categoria:"2" },
+  { nome: "lab rendering", icona: "render", enabled: false, categoria:"2" },
 
-  { nome: "aziende", icona: "company", enabled: true },
-  { nome: "persone", icona: "contacts", enabled: false },
-  { nome: "archivio calzature", icona: "main-archive", enabled: false },
-  { nome: "archivio disegno", icona: "drawings-archive", enabled: false },
-  { nome: "archivio storico", icona: "archive", enabled: false },
+  { nome: "aziende", icona: "company", enabled: true, categoria:"3" },
+  { nome: "persone", icona: "contacts", enabled: false, categoria:"3" },
+
+  { nome: "archivio calzature", icona: "main-archive", enabled: false, categoria:"4" },
+  { nome: "archivio disegno", icona: "drawings-archive", enabled: false, categoria:"4" },
+  { nome: "archivio storico", icona: "archive", enabled: false, categoria:"4" },
 ];
 
 export const menu_ceppi = [

@@ -1,20 +1,19 @@
-import { set } from "zod/v4";
-import { categorie } from "../globals.js";
+import { aree_di_lavoro } from "../globals.js";
 
-const container = document.getElementById("grigliaCategorie");
+const container = document.getElementById("grigliaAree");
 
-categorie.forEach((cat, index) => {
+aree_di_lavoro.forEach((cat, index) => {
   const div = document.createElement("div");
   div.className =
-    "h-48 p-3 bg-custom-800 rounded-xl shadow hover:bg-custom-300 transition cursor-pointer justify-center flex flex-col items-center opacity-0";
+    "h-24 lg:h-36 p-2 bg-custom-800 rounded-xl shadow hover:bg-custom-300 transition cursor-pointer justify-center flex flex-col items-center opacity-0";
 
   const img = document.createElement("img");
   img.src = `../resources/icons/${cat.icona}.svg`;
   img.alt = cat.nome;
-  img.className = "w-12 h-12 mb-4 text-white";
+  img.className = "w-6 lg:w-9 h-6 lg:h-9 mb-2 text-white";
 
   const label = document.createElement("div");
-  label.className = "font-inconsolata text-2xl";
+  label.className = "font-inconsolata text-lg lg:text-xl";
   label.textContent = cat.nome.toUpperCase();
 
   div.appendChild(img);

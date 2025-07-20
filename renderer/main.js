@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.setItem("utente_id", id);
         document.body.classList.add("fade-out");
         setTimeout(() => {
-          window.location.href = "/categorie.html";
+          window.location.href = "/aree.html";
         }, 500);
       } else {
         alert("Password errata");
