@@ -8,10 +8,17 @@
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"
       rel="stylesheet" />
+
+      <style>
+        #grigliaMenu{
+          margin-top: -400px;
+        }
+      </style>
+
     <script type="module" src="pages/menu.js"></script>
   </head>
-  <body
-    class="navbar bg-custom-900 text-white h-screen w-screen flex items-center justify-center">
+  <body class="bg-custom-900 text-white h-screen w-screen flex flex-col">
+    <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
       <a
@@ -22,7 +29,7 @@
           class="h-7 w-7"
           fill="none"
           stroke="currentColor"
-          viewbox="0 0 24 24"
+          viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg">
           <path
             d="M15 19l-7-7 7-7"
@@ -32,6 +39,17 @@
         </svg>
       </a>
     </nav>
-    <div id="grigliaMenu" class="grid grid-cols-2 gap-9 text-center"></div>
+
+    <!-- Spazio riservato alla navbar (per evitare che copra il contenuto) -->
+    <div class="h-[64px]"></div>
+
+    <div class="text-center mt-6">
+      <p id="titolo" class="text-6xl font-inconsolata"></p>
+    </div>
+
+    <!-- Griglia centrata -->
+    <div class="flex-1 flex items-center justify-center">
+      <div id="grigliaMenu" class="grid grid-cols-2 gap-9 text-center"></div>
+    </div>
   </body>
 </html>

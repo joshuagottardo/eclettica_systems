@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ECLETTICA SYSTEM</title>
     <link href="../style.css" rel="stylesheet" />
-    <script src="../pages/dettagli.js" type="module"></script>
+    <script src="../pages/ceppi/dettagli.js" type="module"></script>
   </head>
   <body
     class="dettagli min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
@@ -29,6 +29,23 @@
             stroke-width="2"></path>
         </svg>
       </a>
+      <button
+        id="eliminaArticoloBtn"
+        title="Elimina articolo"
+        class="ml-auto flex items-center justify-center hover:text-red-500 transition-colors">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H7V5a2 2 0 012-2zm3 9v6m-4-6v6" />
+        </svg>
+      </button>
     </nav>
     <main class="flex flex-grow w-full overflow-hidden">
       <!-- Colonna sinistra -->
@@ -155,5 +172,31 @@
         </div>
       </section>
     </main>
+    <div
+      id="confermaEliminaDialog"
+      class="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center hidden">
+      <div
+        class="bg-custom-800 text-gray-200 rounded-xl shadow-lg p-8 flex flex-col items-center w-[300px]">
+        <div class="text-xl font-bold mb-4 text-red-400">
+          Conferma eliminazione
+        </div>
+        <div class="mb-6 text-center text-gray-300">
+          Sei sicuro di voler eliminare questo articolo?<br />Questa azione è
+          irreversibile.
+        </div>
+        <div class="flex gap-4 w-full">
+          <button
+            id="annullaEliminaBtn"
+            class="flex-1 py-2 rounded bg-gray-700 hover:bg-gray-600 transition">
+            Annulla
+          </button>
+          <button
+            id="confermaEliminaBtn"
+            class="flex-1 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition">
+            Elimina
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

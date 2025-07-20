@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECLETTICA SYSTEM</title>
     <link rel="stylesheet" href="../style.css" />
-    <script type="module" src="../pages/ricerca.js"></script>
+    <script type="module" src="../pages/ceppi/ricerca.js"></script>
   </head>
   <body
     class="ricerca min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
@@ -173,5 +173,11 @@
         <!-- Le card degli articoli verranno generate dinamicamente -->
       </section>
     </main>
+    <div
+      id="loaderOverlay"
+      class="fixed inset-0 bg-custom-900 bg-opacity-80 flex items-center justify-center z-50 hidden">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-4 border-custom-300 border-t-transparent"></div>
+    </div>
   </body>
 </html>

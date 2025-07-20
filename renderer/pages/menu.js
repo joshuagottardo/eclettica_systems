@@ -1,11 +1,16 @@
 import { menu_ceppi } from "../globals.js";
+import { menu_aziende } from "../globals.js";
 
 const categoria = sessionStorage.getItem("categoriaSelezionata");
 const container = document.getElementById("grigliaMenu");
+const titolo = document.getElementById("titolo");
 
 const mappa = {
   ceppi: menu_ceppi,
+  aziende: menu_aziende
 };
+
+titolo.textContent = categoria.toUpperCase()
 
 const menu = mappa[categoria] || [];
 

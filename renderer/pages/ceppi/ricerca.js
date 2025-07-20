@@ -3,11 +3,16 @@ let cacheArticoli = [];
 let materialiDisponibili = [];
 let mappaStatoCitta = {};
 
+const galleriaArticoli = document.getElementById("galleria-articoli");
+
 function normalizza(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 }
 
 async function caricaArticoli() {
+  mostraLoader();
+  const start = performance.now(); // ⏱️ avvia cronometro
+
   try {
     const res = await fetch("/api/articoli");
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -18,6 +23,12 @@ async function caricaArticoli() {
     applicaFiltri();
   } catch (err) {
     console.error("Errore caricamento articoli:", err);
+  } finally {
+    const elapsed = performance.now() - start;
+    const remaining = Math.max(0, 400 - elapsed); // 🔁 attesa residua
+    setTimeout(() => {
+      nascondiLoader();
+    }, remaining);
   }
 }
 
@@ -228,9 +239,19 @@ function applicaFiltri() {
     : `<p class="text-gray-400 col-span-2">Nessun risultato trovato.</p>`;
 }
 
+function mostraLoader() {
+  document.getElementById("loaderOverlay")?.classList.remove("hidden");
+  galleriaArticoli.classList.add("hidden");
+}
+
+function nascondiLoader() {
+  document.getElementById("loaderOverlay")?.classList.add("hidden");
+  galleriaArticoli.classList.remove("hidden");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refreshBtn")?.addEventListener("click", () => {
-    aggiornaCache();
+    caricaArticoli();
     caricaMateriali();
   });
 

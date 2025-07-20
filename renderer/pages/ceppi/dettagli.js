@@ -1,3 +1,10 @@
+import { ar } from "zod/v4/locales";
+
+const eliminaArticoloBtn = document.getElementById("eliminaArticoloBtn");
+const confermaDialog = document.getElementById("confermaEliminaDialog");
+const annullaEliminaBtn = document.getElementById("annullaEliminaBtn");
+const confermaEliminaBtn = document.getElementById("confermaEliminaBtn");
+
 document.addEventListener("DOMContentLoaded", () => {
   const id = parseInt(sessionStorage.getItem("articoloId"));
   const cache = JSON.parse(sessionStorage.getItem("cacheArticoli"));
@@ -56,6 +63,35 @@ document.addEventListener("DOMContentLoaded", () => {
       popupImage.src = img.src;
       popupOverlay.classList.remove("hidden");
     });
+  });
+
+  // Mostra dialog alla pressione del cestino
+  eliminaArticoloBtn.addEventListener("click", () => {
+    confermaDialog.classList.remove("hidden");
+  });
+
+  // Annulla: nasconde dialog
+  annullaEliminaBtn.addEventListener("click", () => {
+    confermaDialog.classList.add("hidden");
+  });
+
+  // Conferma: esegue DELETE via API
+  confermaEliminaBtn.addEventListener("click", async () => {
+    try {
+      const response = await fetch(`/api/articoli/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        confermaDialog.classList.add("hidden");
+        alert("Articolo eliminato!");
+        window.location.href = "ricerca.html"; // Torna alla pagina ricerca
+      } else {
+        const err = await response.json();
+        alert("Errore: " + (err.error || "Impossibile eliminare l'articolo."));
+      }
+    } catch (error) {
+      alert("Errore di rete: " + error);
+    }
   });
 });
 
