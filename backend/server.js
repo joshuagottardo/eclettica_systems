@@ -6,10 +6,19 @@ import fs from "fs";
 import multer from "multer";
 import sharp from "sharp";
 
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
 import { ArticoloSchema } from "./models/articolo.js";
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
+
+// Percorso assoluto della cartella corrente (backend)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: `${__dirname}/.env` });
 
 const IMMAGINI_ROOT = "/volume1/eclettica_systems/immagini";
 const ARTICOLI_DIR = path.join(IMMAGINI_ROOT, "articoli");
@@ -28,10 +37,13 @@ const PORT = 3001;
 app.use(express.json());
 app.use(cors());
 
+checkEnvVars(["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"]);
+
 // Serve le immagini statiche
 app.use("/immagini/articoli", express.static(ARTICOLI_DIR));
 
 app.get("/api/articoli", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   try {
     const [rows] = await pool.query(`
       SELECT
@@ -97,6 +109,7 @@ app.delete("/api/articoli/:id", async (req, res) => {
 });
 
 app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
+  res.set("Cache-Control", "no-store");
   const { id, tipo } = req.params;
   for (const ext of ESTENSIONI_FOTO) {
     const filePath = path.join(ARTICOLI_DIR, id, `${tipo}.${ext}`);
@@ -108,11 +121,13 @@ app.get("/api/articoli/:id/foto/:tipo", (req, res) => {
 });
 
 app.get("/api/test", (req, res) => {
+  res.set("Cache-Control", "no-store");
   res.json({ message: "API funzionante!" });
 });
 
 // Select all names from the 'materiale' table
 app.get("/api/materiali", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   try {
     const [rows] = await pool.query(
       "SELECT nome FROM materiale_base ORDER BY nome ASC"
@@ -125,6 +140,7 @@ app.get("/api/materiali", async (req, res) => {
 });
 
 app.get("/api/finiture", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   try {
     const [rows] = await pool.query("SELECT nome FROM finitura");
     const finiture = rows.map((row) => row.nome);
@@ -136,6 +152,7 @@ app.get("/api/finiture", async (req, res) => {
 
 // Select all companies from the 'azienda' table
 app.get("/api/aziende", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   try {
     const [rows] = await pool.query(
       "SELECT id, brand FROM azienda ORDER BY nome ASC"
@@ -149,6 +166,7 @@ app.get("/api/aziende", async (req, res) => {
 
 // Get details of a specific article by ID
 app.get("/api/articoli/:id", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   const id = req.params.id;
   try {
     const [rows] = await pool.query(
@@ -342,6 +360,7 @@ app.post("/api/citta", async (req, res) => {
 });
 
 app.get("/api/utenti", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   try {
     const [rows] = await pool.query(
       "SELECT id, nome FROM utente"
@@ -377,6 +396,20 @@ app.post("/api/verifica-password", async (req, res) => {
     res.status(500).json({ error: "Errore nella verifica della password" });
   }
 });
+
+function checkEnvVars(requiredVars) {
+  let allPresent = true;
+  for (const key of requiredVars) {
+    if (!process.env[key]) {
+      console.error(`Variabile ${key} mancante in .env`);
+      allPresent = false;
+    }
+  }
+  if (!allPresent) {
+    console.error("Alcune variabili d'ambiente mancanti. Verifica il file .env prima di avviare il server.");
+    process.exit(1); // blocca l'avvio per evitare errori a runtime
+  }
+}
 
 app.listen(PORT, () =>
   console.log(`API in ascolto su http://localhost:${PORT}`)

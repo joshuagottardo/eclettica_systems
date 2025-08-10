@@ -26,10 +26,10 @@ export const aree_di_lavoro = [
   { nome: "lab rendering", icona: "render", enabled: false, categoria:"2" },
 
   { nome: "aziende", icona: "company", enabled: true, categoria:"3" },
-  { nome: "persone", icona: "contacts", enabled: false, categoria:"3" },
+  { nome: "persone", icona: "contacts", enabled: true, categoria:"3" },
 
   { nome: "archivio calzature", icona: "main-archive", enabled: false, categoria:"4" },
-  { nome: "archivio disegno", icona: "drawings-archive", enabled: false, categoria:"4" },
+  { nome: "archivio disegni", icona: "drawings-archive", enabled: false, categoria:"4" },
   { nome: "archivio storico", icona: "archive", enabled: false, categoria:"4" },
 ];
 
@@ -41,4 +41,9 @@ export const menu_ceppi = [
 export const menu_aziende = [
   { nome: "inserimento", icona: "add_2", url: "aziende/inserimento.html" },
   { nome: "ricerca", icona: "search", url: "aziende/ricerca.html" },
+];
+
+export const menu_persone = [
+  { nome: "inserimento", icona: "add_2", url: "persone/inserimento.html" },
+  { nome: "ricerca", icona: "search", url: "persone/ricerca.html" },
 ];

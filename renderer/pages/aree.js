@@ -1,26 +1,26 @@
 import { aree_di_lavoro } from "../globals.js";
 
-const container = document.getElementById("grigliaAree");
-
 aree_di_lavoro.forEach((cat, index) => {
   const div = document.createElement("div");
   div.className =
-    "h-24 lg:h-36 p-2 bg-custom-800 rounded-xl shadow hover:bg-custom-300 transition cursor-pointer justify-center flex flex-col items-center opacity-0";
+    "h-20 lg:h-24 p-2 bg-custom-800 rounded-lg shadow hover:bg-custom-300 transition cursor-pointer flex flex-col items-center justify-center opacity-0";
 
   const img = document.createElement("img");
   img.src = `../resources/icons/${cat.icona}.svg`;
   img.alt = cat.nome;
-  img.className = "w-6 lg:w-9 h-6 lg:h-9 mb-2 text-white";
+  img.className = "w-5 lg:w-6 h-5 lg:h-6 mb-1";
 
   const label = document.createElement("div");
-  label.className = "font-inconsolata text-lg lg:text-xl";
+  label.className = "text-sm lg:text-xl text-center font-inconsolata";
   label.textContent = cat.nome.toUpperCase();
 
   div.appendChild(img);
   div.appendChild(label);
 
   div.classList.add("opacity-0", "transition-opacity", "duration-300");
-  container.appendChild(div);
+
+  const container = document.getElementById(`categoria${cat.categoria}`);
+  container?.appendChild(div);
 
   if (cat.enabled) {
     div.addEventListener("click", () => {
@@ -32,8 +32,7 @@ aree_di_lavoro.forEach((cat, index) => {
     });
   } else {
     div.classList.remove("hover:bg-custom-300");
-    div.classList.add("hover:cursor-not-allowed");
-    div.classList.add("bg-custom-950");
+    div.classList.add("hover:cursor-not-allowed", "bg-custom-950");
   }
 
   setTimeout(() => {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECLETTICA SYSTEM</title>
     <link rel="stylesheet" href="../style.css" />
-    <script type="module" src="../pages/aziende/inserimento.js"></script>
+    <script type="module" src="../pages/persone/inserimento.js"></script>
   </head>
   <body
     class="ricerca min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
@@ -50,85 +50,56 @@
     </nav>
 
     <main class="flex flex-grow w-full h-[calc(100vh-74px)] overflow-hidden">
+      <!-- Colonna sinistra -->
       <section
         class="w-1/2 overflow-y-auto p-6 space-y-6 border-r border-custom-100">
         <div class="bg-custom-800 rounded rounded-lg p-6">
-          <div class="mb-6">
-            <label class="block mb-1">Nome</label>
-            <input
-              id="filtroNome"
-              type="text"
-              class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
-              placeholder="" />
+          <div class="flex gap-4 mb-6">
+            <div class="w-1/2">
+              <label class="block mb-1">Nome</label>
+              <input
+                id="filtroNome"
+                type="text"
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                placeholder="" />
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-1">Cognome</label>
+              <input
+                id="filtroCognome"
+                type="text"
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                placeholder="" />
+            </div>
           </div>
-          <div>
-            <label class="block mb-1">Brand</label>
-            <input
-              id="filtroBrand"
-              type="text"
-              class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
-              placeholder="" />
-          </div>
-        </div>
-        <div class="bg-custom-800 rounded rounded-lg p-6">
           <div class="flex gap-4">
             <div class="w-1/2">
-              <label class="mb-1">Tipo</label>
-              <button
-                id="btnAggiungiCitta"
-                type="button"
-                class="text-neutral-500 text-xl font-bold px-2">
-                +
-              </button>
+              <label class="block mb-1">Ruolo</label>
               <select
-                id="filtroTipo"
+                id="filtroRuolo"
                 type="text"
                 class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
                 placeholder=""></select>
             </div>
             <div class="w-1/2">
-              <label class="mb-1">Prezzo</label>
-              <button
-                id="btnAggiungiCitta"
-                type="button"
-                class="text-neutral-500 text-xl font-bold px-2">
-                +
-              </button>
+              <label class="block mb-1">Azienda</label>
               <select
-                id="filtroBrand"
+                id="filtroAzienda"
                 type="text"
                 class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
                 placeholder=""></select>
             </div>
-          </div>
-        </div>
-        <div
-          id="popupOverlay"
-          class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
-          <div class="bg-custom-800 p-6 rounded-lg w-96 space-y-4">
-            <p id="popupTitle" class="text-xl font-bold">Aggiungi elemento</p>
-            <input
-              id="popupInput"
-              type="text"
-              class="w-full p-2 rounded bg-custom-900 text-white border border-custom-100" />
-            <div class="flex justify-end gap-4 mt-4">
-              <button id="popupAnnulla" class="bg-gray-600 px-4 py-2 rounded">
-                Annulla
-              </button>
-              <button id="popupConferma" class="bg-green-700 px-4 py-2 rounded">
-                Aggiungi
-              </button>
-            </div>
-            <p id="popupErrore" class="text-red-400 text-sm mt-2 hidden"></p>
           </div>
         </div>
       </section>
 
       <!-- Colonna destra -->
       <section
-        class="w-1/2 overflow-y-auto p-6 grid grid-cols-2 gap-6 items-start"
-        id="galleria-aziende">
-        <!-- Le card degli articoli verranno generate dinamicamente -->
+        class="w-1/2 overflow-y-auto p-6 grid grid-cols-2 gap-6 items-start">
+        <div class="flex gap-4">
+          <div class="w-1/2 border border-custom-100">SEZIONE 1</div>
+          <div class="w-1/2 border border-custom-100">SEZIONE 2</div>
+        </div>
       </section>
     </main>
 

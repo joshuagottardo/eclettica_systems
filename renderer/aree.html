@@ -12,7 +12,23 @@
   </head>
   <body
     class="categorie bg-custom-900 text-white h-screen w-screen flex items-center justify-center">
-    <div id="grigliaAree" class="grid grid-cols-4 lg:grid-cols-4 md:grid-cols-3 gap-9 text-center"></div>
+    <div
+      id="grigliaCategorie"
+      class="flex w-full h-full p-20 gap-20 justify-center overflow-auto">
+      <div id="categoria1" class="flex flex-col gap-4 w-1/4 ml-6">
+        <p class="font-inconsolata">ARTICOLI</p>
+      </div>
+      <div id="categoria2" class="flex flex-col gap-4 w-1/4 ml-6">
+        <p class="font-inconsolata">LABORATORI</p>
+      </div>
+      <div id="categoria3" class="flex flex-col gap-4 w-1/4 ml-6">
+        <p class="font-inconsolata">CONTATTI</p>
+      </div>
+      <div id="categoria4" class="flex flex-col gap-4 w-1/4 ml-6">
+        <p class="font-inconsolata">ARCHIVI</p>
+      </div>
+    </div>
+
     <button
       id="logout-btn"
       class="fixed bottom-4 right-4 px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-lg fade-in">
