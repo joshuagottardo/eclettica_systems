@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECLETTICA SYSTEM</title>
     <link rel="stylesheet" href="../style.css" />
+
     <script type="module" src="../pages/aziende/ricerca.js"></script>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+    <!-- iOS full-screen + icona come sopra -->
+    <link rel="apple-touch-icon" href="/resources/icons/app-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Eclettica" />
   </head>
   <body
     class="ricerca min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
@@ -50,7 +57,8 @@
     </nav>
 
     <main class="flex flex-grow w-full h-[calc(100vh-74px)] overflow-hidden">
-      <section class="w-1/2 overflow-y-auto p-6 space-y-6 border-r border-custom-100">
+      <section
+        class="w-1/2 overflow-y-auto p-6 space-y-6 border-r border-custom-100">
         <div class="bg-custom-800 rounded rounded-lg p-6">
           <div class="mb-6">
             <label class="block mb-1">Nome</label>

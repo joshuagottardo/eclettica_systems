@@ -1,30 +1,26 @@
+const API = import.meta.env.VITE_API_BASE || "";
+
 let utenti = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-  const audio = new Audio("resources/audio/benvenuti.mp3");
-  audio.play().catch((err) => {
-    console.warn("Errore nel riprodurre l'audio benvenuto:", err);
-  });
-
   const grid = document.getElementById("utenti-grid");
 
+  // carica utenti e, appena pronti, mostra la griglia (prima lo facevi al termine dell'audio)
   recuperaUtenti().then(() => {
-    audio.addEventListener("ended", () => {
-      document.getElementById("intro").classList.add("translate-up-100");
+    document.getElementById("intro").classList.add("translate-up-100");
 
-      utenti.forEach((utente, index) => {
-        const div = document.createElement("div");
-        div.className =
-          "utente-item bg-custom-700 text-white text-m p-5 rounded text-center cursor-pointer opacity-0 scale-95 transition duration-500 ease-out";
-        div.textContent = utente.nome.toUpperCase();
-        div.dataset.nome = utente.nome;
-        div.dataset.id = utente.id;
-        grid.appendChild(div);
+    utenti.forEach((utente, index) => {
+      const div = document.createElement("div");
+      div.className =
+        "utente-item bg-custom-700 text-white text-m p-5 rounded text-center cursor-pointer opacity-0 scale-95 transition duration-500 ease-out";
+      div.textContent = utente.nome.toUpperCase();
+      div.dataset.nome = utente.nome;
+      div.dataset.id = utente.id;
+      grid.appendChild(div);
 
-        setTimeout(() => {
-          div.classList.add("fade-in");
-        }, index * 100);
-      });
+      setTimeout(() => {
+        div.classList.add("fade-in");
+      }, index * 100);
     });
   });
 
@@ -52,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saluto.textContent = `CIAO ${nome.toUpperCase()}`;
       loginBox.dataset.nome = nome;
 
-      // Reset posizione saluto
+      // Reset posizione saluto + animazione
       saluto.classList.remove("translate-up-40");
       saluto.classList.add("translate-start");
 
@@ -62,32 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }, 500);
 
-    const audioPath = `resources/audio/users/${nome}.mp3`;
-    const audioUser = new Audio(audioPath);
-    audioUser.play().catch((err) => {
-      console.warn(`Errore nel riprodurre l'audio per ${nome}:`, err);
-    });
-
-    audioUser.addEventListener("ended", () => {
+    // Prima mostravi i campi alla fine degli audio; ora usiamo un semplice delay coerente con l’animazione
+    setTimeout(() => {
       const passwordInput = document.getElementById("password");
-      const loginBtn = document.querySelector(
-        '#login-form button[type="submit"]'
-      );
+      const loginBtn = document.querySelector('#login-form button[type="submit"]');
       const cambiaUtenteBtn = document.getElementById("cambia-utente");
-
-      // Mostra form solo dopo la transizione del saluto
-      setTimeout(() => {
-        [passwordInput, loginBtn, cambiaUtenteBtn].forEach((el) => {
-          el.classList.remove("hidden");
-          el.classList.add("fade-in");
-        });
-      }, 400);
-
-      const audioPassword = new Audio("resources/audio/password.mp3");
-      audioPassword.play().catch((err) => {
-        console.warn("Errore nel riprodurre l'audio password:", err);
+      [passwordInput, loginBtn, cambiaUtenteBtn].forEach((el) => {
+        el.classList.remove("hidden");
+        el.classList.add("fade-in");
       });
-    });
+    }, 900); // 500ms (switch) + ~400ms (anim saluto)
   });
 
   document.getElementById("login-form").addEventListener("submit", (e) => {
@@ -96,8 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const nome = loginBox.dataset.nome;
     const id = parseInt(loginBox.dataset.id, 10);
     const password = document.getElementById("password").value;
-
-    console.log("Ricevuto:", { id, password });
 
     if (isNaN(id)) {
       alert("Errore interno: ID utente non valido");
@@ -130,9 +108,7 @@ document.getElementById("cambia-utente").addEventListener("click", () => {
   loginBox.classList.add("fade-out");
 
   setTimeout(() => {
-    [passwordInput, loginBtn, cambiaUtenteBtn].forEach((el) => {
-      el.classList.add("hidden");
-    });
+    [passwordInput, loginBtn, cambiaUtenteBtn].forEach((el) => el.classList.add("hidden"));
 
     loginBox.classList.add("hidden");
     loginBox.classList.remove("fade-out");
@@ -155,24 +131,22 @@ document.getElementById("cambia-utente").addEventListener("click", () => {
 
 async function recuperaUtenti() {
   try {
-    const res = await fetch("/api/utenti");
+    const res = await fetch(`${API}/api/utenti`);
     utenti = await res.json(); // [{ id, nome }]
+    console.log("Utenti recuperati:", utenti);
   } catch (err) {
     console.error("Errore nel recuperare utenti dal server:", err);
-    return;
   }
 }
 
 async function verificaPassword(id, password) {
   try {
-    const res = await fetch("/api/verifica-password", {
+    const res = await fetch(`${API}/api/verifica-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, password }),
     });
-
     if (!res.ok) return false;
-
     const data = await res.json();
     return data.valida === true;
   } catch (err) {

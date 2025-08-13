@@ -21,6 +21,7 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: `${__dirname}/.env` });
 
 const IMMAGINI_ROOT = "/volume1/eclettica_systems/immagini";
+const ARCHIVIO_DISEGNI_DIR = "/volume1/eclettica_systems/archivio-disegni";
 const ARTICOLI_DIR = path.join(IMMAGINI_ROOT, "articoli");
 const ESTENSIONI_FOTO = [
   "jpg",
@@ -35,12 +36,19 @@ const ESTENSIONI_FOTO = [
 const PORT = 3001;
 
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: ["https://app.ststudiomilano.it", "http://localhost:5173"],
+    credentials: true,
+  })
+);
 
 checkEnvVars(["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"]);
 
 // Serve le immagini statiche
 app.use("/immagini/articoli", express.static(ARTICOLI_DIR));
+app.use("/immagini/archivio-disegni", express.static(ARCHIVIO_DISEGNI_DIR));
 
 app.get("/api/articoli", async (req, res) => {
   res.set("Cache-Control", "no-store");
@@ -363,7 +371,7 @@ app.get("/api/utenti", async (req, res) => {
   res.set("Cache-Control", "no-store");
   try {
     const [rows] = await pool.query(
-      "SELECT id, nome FROM utente"
+      "SELECT id, nome FROM utente WHERE attivo = 1"
     );
     res.json(rows);
   } catch (err) {
@@ -397,6 +405,57 @@ app.post("/api/verifica-password", async (req, res) => {
   }
 });
 
+app.post("/api/inserisci-disegno", upload.single("disegno"), async (req, res) => {
+  try {
+    const {
+      articolo,
+      id_autore,
+      stagione,
+      sigla_stagione,
+      modello = null,
+      fondo_id_formificio,
+      fondo_articolo
+    } = req.body;
+
+    // Validazioni minime
+    if (!articolo) return res.status(400).json({ error: "articolo mancante" });
+    if (!req.file) return res.status(400).json({ error: "disegno mancante" });
+
+    // Recupera nome autore dalla tabella utente
+    const [utenti] = await pool.query("SELECT nome FROM utente WHERE id = ?", [id_autore]);
+    if (!utenti.length) return res.status(400).json({ error: "Autore non trovato" });
+    const nome_autore = utenti[0].nome;
+
+    // Inserimento record nel DB
+    await pool.query(
+      `INSERT INTO archivio_disegni 
+       (articolo, id_autore, stagione, sigla_stagione, modello, fondo_id_formificio, fondo_articolo, data_inserimento)
+       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
+      [articolo, id_autore, stagione, sigla_stagione, modello, fondo_id_formificio, fondo_articolo]
+    );
+
+    // Pulizia del nome file (solo lettere, numeri, -, _)
+    const safeArticolo = articolo.replace(/[^a-zA-Z0-9-_]/g, "_");
+
+    // Salvataggio file in /archivio-disegni/<nome_autore>/<articolo>.jpg
+    const autoreDir = path.join(ARCHIVIO_DISEGNI_DIR, nome_autore);
+    if (!fs.existsSync(autoreDir)) {
+      fs.mkdirSync(autoreDir, { recursive: true });
+    }
+    const outputPath = path.join(autoreDir, `${safeArticolo}.jpg`);
+    await sharp(req.file.buffer).jpeg({ quality: 85 }).toFile(outputPath);
+
+    res.json({
+      success: true,
+      image: `/immagini/archivio-disegni/${encodeURIComponent(nome_autore)}/${safeArticolo}.jpg`
+    });
+  } catch (err) {
+    console.error("Errore salvataggio archivio_disegni:", err);
+    res.status(500).json({ error: "Errore server" });
+  }
+});
+
+
 function checkEnvVars(requiredVars) {
   let allPresent = true;
   for (const key of requiredVars) {
@@ -406,7 +465,9 @@ function checkEnvVars(requiredVars) {
     }
   }
   if (!allPresent) {
-    console.error("Alcune variabili d'ambiente mancanti. Verifica il file .env prima di avviare il server.");
+    console.error(
+      "Alcune variabili d'ambiente mancanti. Verifica il file .env prima di avviare il server."
+    );
     process.exit(1); // blocca l'avvio per evitare errori a runtime
   }
 }

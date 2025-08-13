@@ -1,4 +1,5 @@
 import { ar } from "zod/v4/locales";
+const API = import.meta.env.VITE_API_BASE || "";
 
 const eliminaArticoloBtn = document.getElementById("eliminaArticoloBtn");
 const confermaDialog = document.getElementById("confermaEliminaDialog");
@@ -19,7 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const mostra = (val) => (val != null && val !== "" ? val : "-");
+  const mostra = (val) => {
+    if (val != null && val !== "") {
+      return String(val).toUpperCase();
+    }
+    return "-";
+  };
 
   const assegna = (id, valore) => {
     const el = document.getElementById(id);
@@ -40,23 +46,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const lista = document.getElementById("listaMateriali");
   if (lista && Array.isArray(articolo.materiali)) {
     const ul = document.createElement("ul");
-    ul.className = "list-disc pl-5";
+    ul.className = "list-disc font-inconsolata pl-5";
     articolo.materiali.forEach((m) => {
       const li = document.createElement("li");
-      li.textContent = m;
+      li.textContent = m.toUpperCase();
+      li.className = "font-inconsolata";
       ul.appendChild(li);
     });
     lista.appendChild(ul);
   }
 
-  const BASE_URL = "https://trentin-nas.synology.me";
   document.querySelectorAll(".image-drop").forEach((div) => {
     const tipo = div.dataset.id;
     const img = document.createElement("img");
-    img.src = `${BASE_URL}/immagini/articoli/${id}/${tipo}.jpg`;
-    img.alt = tipo;
+    img.src = `${API}/immagini/articoli/${id}/${tipo}.jpg`;
+    img.onerror = function () {
+      this.src = "../resources/img/placeholder.jpg";
+    };
     img.className = "object-cover w-full h-full rounded";
-    img.onerror = () => div.classList.add("opacity-30");
     div.innerHTML = "";
     div.appendChild(img);
     img.addEventListener("click", () => {
@@ -78,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Conferma: esegue DELETE via API
   confermaEliminaBtn.addEventListener("click", async () => {
     try {
-      const response = await fetch(`/api/articoli/${id}`, {
+      const response = await fetch(`${API}/api/articoli/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {

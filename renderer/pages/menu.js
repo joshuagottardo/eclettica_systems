@@ -1,8 +1,7 @@
-import { menu_ceppi } from "../globals.js";
-import { menu_aziende } from "../globals.js";
-import { menu_persone } from "../globals.js";
+import { menu_aziende, menu_persone, menu_archivio_storico, menu_archivio_disegni, menu_ceppi } from "../globals.js";
 
 const categoria = sessionStorage.getItem("categoriaSelezionata");
+const displayCategoria = sessionStorage.getItem("displayCategoriaSelezionata");
 const container = document.getElementById("grigliaMenu");
 const titolo = document.getElementById("titolo");
 
@@ -10,9 +9,11 @@ const mappa = {
   ceppi: menu_ceppi,
   aziende: menu_aziende,
   persone: menu_persone,
+  archivio_storico: menu_archivio_storico,
+  archivio_disegni: menu_archivio_disegni,
 };
 
-titolo.textContent = categoria.toUpperCase()
+titolo.textContent = displayCategoria.toUpperCase()
 
 const menu = mappa[categoria] || [];
 
@@ -27,10 +28,7 @@ menu.forEach((item, index) => {
   `;
 
   div.addEventListener("click", () => {
-    div.classList.add("fade-out");
-    setTimeout(() => {
       window.location.href = item.url;
-    }, 400);
   });
 
   // effetto fade-in progressivo
@@ -41,4 +39,3 @@ menu.forEach((item, index) => {
 
   container.appendChild(div);
 });
-

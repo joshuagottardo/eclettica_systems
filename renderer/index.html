@@ -6,6 +6,12 @@
     <title>ECLETTICA SYSTEM</title>
     <link href="style.css" rel="stylesheet" />
     <script type="module" src="/main.js"></script>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+    <!-- iOS full-screen + icona come sopra -->
+    <link rel="apple-touch-icon" href="/resources/icons/app-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Eclettica" />
   </head>
   <body
     class="bg-custom-900 text-white min-h-screen flex flex-col items-center justify-center font-sans overflow-hidden">
@@ -30,7 +36,9 @@
       id="login-box"
       class="hidden flex flex-col items-center mt-12 space-y-4">
       <h1 id="saluto" class="text-5xl font-inconsolata font-semibold"></h1>
-      <form id="login-form" class="flex flex-col items-center space-y-4 min-h-[200px]">
+      <form
+        id="login-form"
+        class="flex flex-col items-center space-y-4 min-h-[200px]">
         <input
           id="password"
           type="password"

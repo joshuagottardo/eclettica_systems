@@ -7,12 +7,12 @@ aree_di_lavoro.forEach((cat, index) => {
 
   const img = document.createElement("img");
   img.src = `../resources/icons/${cat.icona}.svg`;
-  img.alt = cat.nome;
+  img.alt = cat.display;
   img.className = "w-5 lg:w-6 h-5 lg:h-6 mb-1";
 
   const label = document.createElement("div");
   label.className = "text-sm lg:text-xl text-center font-inconsolata";
-  label.textContent = cat.nome.toUpperCase();
+  label.textContent = cat.display.toUpperCase();
 
   div.appendChild(img);
   div.appendChild(label);
@@ -25,10 +25,8 @@ aree_di_lavoro.forEach((cat, index) => {
   if (cat.enabled) {
     div.addEventListener("click", () => {
       sessionStorage.setItem("categoriaSelezionata", cat.nome.toLowerCase());
-      div.classList.add("fade-out");
-      setTimeout(() => {
-        window.location.href = "menu.html";
-      }, 400);
+      sessionStorage.setItem("displayCategoriaSelezionata", cat.display.toLowerCase());
+      window.location.href = "menu.html";
     });
   } else {
     div.classList.remove("hover:bg-custom-300");
@@ -38,7 +36,7 @@ aree_di_lavoro.forEach((cat, index) => {
   setTimeout(() => {
     div.classList.remove("opacity-0");
     div.classList.add("fade-in-6");
-  }, index * 180);
+  }, index * 80);
 });
 
 document.getElementById("logout-btn")?.addEventListener("click", () => {

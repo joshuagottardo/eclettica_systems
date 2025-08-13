@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ECLETTICA SYSTEM</title>
+    <link href="../style.css" rel="stylesheet" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="apple-touch-icon" href="/resources/icons/app-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Eclettica" />
+
+    <script
+      src="../pages/archivio_disegni/inserimento.js"
+      type="module"></script>
+  </head>
+  <body
+    class="inserimento min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-custom-800 py-3 px-4 flex items-center justify-between shadow-lg">
+      <a
+        class="text-gray-100 hover:text-custom-100 transition text-2xl flex items-center"
+        href="javascript:history.back()"
+        title="Indietro">
+        <svg
+          class="h-7 w-7"
+          fill="none"
+          stroke="currentColor"
+          viewbox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M15 19l-7-7 7-7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"></path>
+        </svg>
+      </a>
+    </nav>
+
+    <main class="flex flex-grow w-full overflow-hidden">
+      <!-- Colonna sinistra -->
+      <section
+        class="w-1/2 overflow-y-auto p-6 border-r border-custom-100 space-y-6">
+        <div class="bg-custom-800 rounded rounded-lg p-6">
+          <div class="flex gap-4">
+            <div class="w-1/2">
+              <label class="block mb-2">Articolo</label>
+              <input
+                class="w-full bg-custom-900 text-white border border-red-900 rounded p-2 placeholder-custom-100"
+                id="articoloInput"
+                placeholder=""
+                type="text" />
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-2">Autore</label>
+              <select
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
+                id="autoreInput">
+                <option value=""></option>
+                <option value="13">Andrea</option>
+                <option value="5">Bruno</option>
+                <option value="14">Cristina</option>
+                <option value="9">Marianna</option>
+                <option value="15">Marina</option>
+                <option value="10">Martina</option>
+                <option value="12">Vera</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex gap-4 mt-6">
+            <div class="w-1/2">
+              <label class="block mb-2">Sigla Stagione</label>
+              <input
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                id="siglaInput"
+                placeholder=""
+                type="text" />
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-2">Stagione</label>
+              <select
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
+                id="stagioneInput">
+                <option value=""></option>
+                <option value="primavera">Primavera</option>
+                <option value="estate">Estate</option>
+                <option value="autunno">Autunno</option>
+                <option value="inverno">Inverno</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="bg-custom-800 rounded rounded-lg p-6">
+          <p class="font-inconsolata text-2xl">FONDO</p>
+          <div class="flex gap-4 mt-3">
+            <div class="w-1/2">
+              <label class="block mb-2">Formificio</label>
+              <select
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
+                id="formificioInput">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-2">Articolo</label>
+              <input
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                id="articoloFondoInput"
+                placeholder=""
+                type="text" />
+            </div>
+          </div>
+        </div>
+        <div class="bg-custom-800 rounded rounded-lg p-6">
+          <p class="font-inconsolata text-2xl">ACCESSORI</p>
+          <div class="flex gap-4 mt-3">
+            <div class="w-1/2">
+              <label class="block mb-2">Accessorificio</label>
+              <select
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"
+                id="accessorificioInput">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="w-1/2">
+              <label class="block mb-2">Articolo</label>
+              <input
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                id="articoloAccessorioInput"
+                placeholder=""
+                type="text" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Colonna destra -->
+      <section class="w-1/2 pt-6 pr-6 pl-6 pb-3 flex flex-col gap-6">
+        <div
+          class="image-drop cursor-pointer relative bg-custom-700 rounded-lg shadow-inner flex items-center justify-center h-96"
+          data-id="principale">
+          <i class="font-inconsolata">disegno</i>
+        </div>
+        <button
+          class="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded"
+          type="submit">
+          Aggiungi disegno
+        </button>
+      </section>
+    </main>
+  </body>
+</html>

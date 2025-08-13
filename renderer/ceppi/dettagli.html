@@ -6,6 +6,13 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ECLETTICA SYSTEM</title>
     <link href="../style.css" rel="stylesheet" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+    <!-- iOS full-screen + icona come sopra -->
+    <link rel="apple-touch-icon" href="/resources/icons/app-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Eclettica" />
+
     <script src="../pages/ceppi/dettagli.js" type="module"></script>
   </head>
   <body
@@ -52,12 +59,13 @@
       <section
         class="w-1/2 overflow-y-auto p-6 border-r border-custom-100 space-y-6">
         <div class="bg-custom-800 rounded rounded-lg p-5">
-          <div class="flex gap-1">
+          <p class="font-inconsolata text-2xl">ARTICOLO</p>
+          <div class="flex gap-1 mt-5">
             <div class="w-1/2">
-              <label class="font-inconsolata block" id="campoCodice"></label>
+              <label class="font-inconsolata block" id="campoCodice">art:</label>
             </div>
             <div class="w-1/2">
-              <label class="font-inconsolata block" id="campoAzienda"></label>
+              <label class="font-inconsolata block" id="campoAzienda">suolificio:</label>
             </div>
           </div>
         </div>
@@ -65,10 +73,10 @@
           <p class="font-inconsolata text-2xl">DETTAGLI</p>
           <div class="flex gap-4 mt-5">
             <div class="w-1/2">
-              <label class="font-inconsolata block" id="campoTipologia"></label>
+              <label class="font-inconsolata block" id="campoTipologia">tipo:</label>
             </div>
             <div class="w-1/2">
-              <label class="font-inconsolata block" id="campoPunta"></label>
+              <label class="font-inconsolata block" id="campoPunta">punta:</label>
             </div>
           </div>
           <div class="flex gap-4">
@@ -76,11 +84,11 @@
               <label
                 class="font-inconsolata"
                 for="filtroAltezza"
-                id="campoAltezzaTacco"></label>
+                id="campoAltezzaTacco">tacco:</label>
               <label class="font-inconsolata"> mm</label>
             </div>
             <div class="w-1/2 mt-5">
-              <label class="font-inconsolata block" id="campoFinitura"></label>
+              <label class="font-inconsolata block" id="campoFinitura">finitura: </label>
             </div>
           </div>
         </div>
@@ -94,16 +102,16 @@
             <div class="w-1/2">
               <label
                 class="font-inconsolata block"
-                id="campoMatricolaForma"></label>
+                id="campoMatricolaForma">matricola:</label>
             </div>
             <div class="w-1/2">
               <label
                 class="font-inconsolata block"
-                id="campoAziendaForma"></label>
+                id="campoAziendaForma">formificio:</label>
             </div>
           </div>
           <div class="mt-5">
-            <label class="font-inconsolata" id="campoCittaProduzione"></label>,
+            <label class="font-inconsolata" id="campoCittaProduzione">produzione: </label>,
             <label class="font-inconsolata" id="campoStatoProduzione"></label>
           </div>
         </div>

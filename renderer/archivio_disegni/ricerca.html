@@ -1,18 +1,20 @@
 <!DOCTYPE html>
+
 <html lang="it">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ECLETTICA SYSTEM</title>
-    <link rel="stylesheet" href="../style.css" />
+    <link href="../style.css" rel="stylesheet" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#000000" />
-    <!-- iOS full-screen + icona come sopra -->
     <link rel="apple-touch-icon" href="/resources/icons/app-180.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Eclettica" />
 
-    <script type="module" src="../pages/ceppi/ricerca.js"></script>
+    <script
+      src="../pages/archivio_disegni/inserimento.js"
+      type="module"></script>
   </head>
   <body
     class="ricerca min-h-screen flex flex-col bg-custom-900 text-gray-200 font-sans">
@@ -64,110 +66,94 @@
             <div class="w-1/2">
               <label class="block mb-1">Articolo</label>
               <input
-                id="filtroCodice"
+                id="filtroArticolo"
                 type="text"
                 class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
                 placeholder="" />
             </div>
 
             <div class="w-1/2">
-              <label class="block mb-2">Azienda</label>
+              <label class="block mb-2">Autore</label>
               <select
-                id="filtroAzienda"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+                id="filtroAutore"
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500">
+                <option value="all">Tutti</option>
+                <option value="13">Andrea</option>
+                <option value="5">Bruno</option>
+                <option value="14">Cristina</option>
+                <option value="9">Marianna</option>
+                <option value="15">Marina</option>
+                <option value="10">Martina</option>
+                <option value="12">Vera</option>
+              </select>
             </div>
           </div>
           <div class="flex gap-4 mt-6">
             <div class="w-1/2">
-              <label class="block mb-3">Stato produzione</label>
-              <select
-                id="filtroStatoProduzione"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+              <label class="block mb-2">Sigla Stagione</label>
+              <input
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                id="filtroSiglaStagione"
+                placeholder=""
+                type="text" />
             </div>
             <div class="w-1/2">
-              <label class="block mb-3">Città produzione</label>
+              <label class="block mb-3">Stagione</label>
               <select
                 id="filtroCittaProduzione"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500">
+                <option value="all">Tutte</option>
+                <option value="primavera">Primavera</option>
+                <option value="estate">Estate</option>
+                <option value="autunno">Autunno</option>
+                <option value="inverno">Inverno</option>
+              </select>
             </div>
-          </div>
-
-          <div class="mt-6">
-            <label
-              for="inSerieCheckbox"
-              class="inline-flex items-center gap-2 text-white text-base">
-              Articolo in serie?
-              <input
-                id="filtroInSerie"
-                type="checkbox"
-                class="accent-custom-500 w-5 h-5" />
-            </label>
           </div>
         </div>
 
         <div class="bg-custom-800 rounded rounded-lg p-6">
-          <p class="font-inconsolata text-2xl">DETTAGLI</p>
+          <p class="font-inconsolata text-2xl">FONDO</p>
 
           <div class="flex gap-4 mt-3">
             <div class="w-1/2">
-              <label class="block mb-3">Tipologia</label>
-              <div id="filtroTipologia" class="flex gap-3 flex-wrap"></div>
-            </div>
-
-            <div class="w-1/2">
-              <label class="block mb-3">Punta</label>
-              <div id="filtroPunta" class="flex gap-3 flex-wrap"></div>
-            </div>
-          </div>
-
-          <div class="flex gap-4 mt-3">
-            <div class="w-1/2 mt-5">
-              <label for="filtroAltezza" class="block mb-3"
-                >Altezza tacco</label
-              >
+              <label class="block mb-3">Formificio</label>
               <input
-                id="filtroAltezza"
-                type="number"
-                min="0"
-                max="200"
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                id="filtroFormificio"
                 placeholder=""
-                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100" />
+                type="text" />
             </div>
 
-            <div class="w-1/2 mt-5">
-              <label class="block mb-4">Finitura</label>
-              <select
-                id="filtroFinitura"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+            <div class="w-1/2">
+              <label class="block mb-3">Articolo</label>
+              <input
+                class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
+                id="filtroArticoloFondo"
+                placeholder=""
+                type="text" />
             </div>
           </div>
         </div>
 
         <div class="bg-custom-800 rounded rounded-lg p-6">
-          <p class="font-inconsolata text-2xl">MATERIALI</p>
-          <div
-            id="filtroMateriali"
-            class="flex gap-3 flex-wrap mt-4 opacity-0 transition-opacity duration-1000 min-h-[95px]"></div>
-        </div>
-
-        <div class="bg-custom-800 rounded rounded-lg p-6">
-          <p class="font-inconsolata text-2xl">FORMA</p>
+          <p class="font-inconsolata text-2xl">ACCESSORI</p>
 
           <div class="flex gap-4 mt-3">
             <div class="w-1/2">
-              <label class="block mb-3">Matricola</label>
+              <label class="block mb-3">Accessorificio</label>
+              <select
+                id="filtroAccessorificio"
+                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
+            </div>
+
+            <div class="w-1/2">
+              <label class="block mb-3">Articolo</label>
               <input
-                id="filtroMatricolaForma"
+                id="filtroArticoloAccessorio"
                 type="text"
                 class="w-full bg-custom-900 text-white rounded p-2 placeholder-custom-100"
                 placeholder="" />
-            </div>
-
-            <div class="w-1/2">
-              <label class="block mb-3">Formificio</label>
-              <select
-                id="filtroAziendaForma"
-                class="w-full bg-custom-900 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-custom-500"></select>
             </div>
           </div>
         </div>

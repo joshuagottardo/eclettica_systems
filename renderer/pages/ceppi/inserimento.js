@@ -1,10 +1,11 @@
-const immagini = {}; // { tipo: File }
+const API = import.meta.env.VITE_API_BASE || "";
+const immagini = {};
 let mappaStatoCitta = {};
 let materialiDisponibili = [];
 
 async function caricaMateriali() {
   try {
-    const res = await fetch("/api/materiali");
+    const res = await fetch(`${API}/api/materiali`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     materialiDisponibili = await res.json();
     creaRadioPill(
@@ -23,7 +24,7 @@ async function caricaMateriali() {
 
 async function caricaFiniture() {
   try {
-    const res = await fetch("/api/finiture");
+    const res = await fetch(`${API}/api/finiture`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     const finiture = await res.json();
 
@@ -82,7 +83,7 @@ function creaRadioPill(containerId, nomi, nomeFiltro, tipo = "radio") {
 
 async function caricaAziende() {
   try {
-    const res = await fetch("/api/aziende");
+    const res = await fetch(`${API}/api/aziende`);
     const aziende = await res.json();
     const selectAzienda = document.getElementById("filtroAzienda");
     const selectAziendaForma = document.getElementById("filtroAziendaForma");
@@ -101,7 +102,7 @@ async function caricaAziende() {
 
 async function caricaStatiECitta() {
   try {
-    const res = await fetch("/api/articoli");
+    const res = await fetch(`${API}/api/articoli`);
     const articoli = await res.json();
     const statiSet = new Set();
     mappaStatoCitta = {};
@@ -150,47 +151,106 @@ async function caricaStatiECitta() {
   }
 }
 
-// GESTIONE DROPZONE IMMAGINI
 function setupDropzones() {
   document.querySelectorAll(".image-drop").forEach((dropZone) => {
     const tipo = dropZone.dataset.id;
-    const originalText = dropZone.innerHTML;
 
-    dropZone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropZone.classList.add("ring-2", "ring-blue-500");
-    });
+    // Ricordiamo il contenuto iniziale (il <i> "foto principale"...)
+    const originalHTML = dropZone.innerHTML;
+    const originalLabelEl = dropZone.querySelector("i");
 
-    dropZone.addEventListener("dragleave", () => {
-      dropZone.classList.remove("ring-2", "ring-blue-500");
-    });
+    // 1) Crea input file nascosto (anche fotocamera su iPad)
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    
+    input.hidden = true;
+    dropZone.appendChild(input);
 
-    dropZone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropZone.classList.remove("ring-2", "ring-blue-500");
+    // 2) Crea elementi preview e pulsante elimina (inizialmente nascosti)
+    const preview = document.createElement("img");
+    preview.className =
+      "object-cover w-full h-full rounded opacity-100 hover:opacity-60 transition-opacity";
+    preview.style.display = "none";
+    dropZone.appendChild(preview);
 
-      const file = e.dataTransfer.files[0];
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.textContent = "Elimina";
+    delBtn.className =
+      "delete-btn absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow hover:bg-red-700";
+    delBtn.style.display = "none";
+    dropZone.appendChild(delBtn);
+
+    // 3) Utilità comune per applicare la preview e salvare il file
+    function setPreview(file) {
       if (!file || !file.type.startsWith("image/")) {
-        alert("Trascina un'immagine valida.");
+        alert("Seleziona un'immagine valida.");
         return;
       }
-
       immagini[tipo] = file;
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        dropZone.innerHTML = `
-          <img src="${event.target.result}" class="object-cover w-full h-full rounded opacity-100 hover:opacity-60 transition-opacity" />
-          <button class="delete-btn absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow hover:bg-red-700">Elimina</button>
-        `;
-        const deleteBtn = dropZone.querySelector(".delete-btn");
-        deleteBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          dropZone.innerHTML = originalText;
-          delete immagini[tipo];
-        });
-      };
-      reader.readAsDataURL(file);
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      preview.onload = () => URL.revokeObjectURL(url);
+
+      if (originalLabelEl) originalLabelEl.style.display = "none";
+      preview.style.display = "block";
+      delBtn.style.display = "inline-block";
+      dropZone.classList.remove("ring-2", "ring-blue-500");
+    }
+
+    function resetPreview() {
+      delete immagini[tipo];
+      preview.src = "";
+      preview.style.display = "none";
+      delBtn.style.display = "none";
+      if (originalLabelEl) {
+        originalLabelEl.style.display = "";
+      } else {
+        // fallback, se non trova <i> ripristina HTML testuale
+        dropZone.innerHTML = originalHTML;
+        // ATTENZIONE: se ripristini innerHTML, devi riagganciare tutto.
+        // Per semplicità non lo facciamo: manteniamo originalLabelEl.
+      }
+    }
+
+    // 4) Click/tap sul riquadro -> apri picker (ma non se clicchi "Elimina")
+    dropZone.addEventListener("click", (e) => {
+      if (e.target === delBtn) return;
+      input.click();
+    });
+
+    // 5) Cambio file dal picker
+    input.addEventListener("change", () => {
+      if (input.files && input.files[0]) {
+        setPreview(input.files[0]);
+        input.value = ""; // consente di riselezionare lo stesso file
+      }
+    });
+
+    // 6) Drag & Drop (desktop)
+    ["dragenter", "dragover"].forEach((ev) => {
+      dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.add("ring-2", "ring-blue-500");
+      });
+    });
+    ["dragleave", "drop"].forEach((ev) => {
+      dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("ring-2", "ring-blue-500");
+      });
+    });
+    dropZone.addEventListener("drop", (e) => {
+      const file = e.dataTransfer?.files?.[0];
+      if (file) setPreview(file);
+    });
+
+    // 7) Elimina
+    delBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      resetPreview();
     });
   });
 }
@@ -250,7 +310,7 @@ async function inviaArticolo() {
   }
 
   try {
-    const res = await fetch("/api/articoli", {
+    const res = await fetch(`${API}/api/articoli`, {
       method: "POST",
       body: formData,
     });
@@ -326,7 +386,7 @@ function mostraPopup(titolo, callback) {
 
 document.getElementById("btnAggiungiStato")?.addEventListener("click", () => {
   mostraPopup("Aggiungi stato produzione", async (valore) => {
-    const res = await fetch("/api/stati", {
+    const res = await fetch(`${API}/api/stati`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nome: valore }),
@@ -352,7 +412,7 @@ document.getElementById("btnAggiungiCitta")?.addEventListener("click", () => {
   }
 
   mostraPopup("Aggiungi città di produzione", async (valore) => {
-    const res = await fetch("/api/citta", {
+    const res = await fetch(`${API}/api/citta`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ stato, nome: valore }),

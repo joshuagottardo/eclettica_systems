@@ -1,4 +1,6 @@
 // --- INIZIALIZZAZIONE E CARICAMENTO ---
+const API = import.meta.env.VITE_API_BASE || "";
+
 let cacheArticoli = [];
 let materialiDisponibili = [];
 let mappaStatoCitta = {};
@@ -14,7 +16,7 @@ async function caricaArticoli() {
   const start = performance.now(); // ⏱️ avvia cronometro
 
   try {
-    const res = await fetch("/api/articoli");
+    const res = await fetch(`${API}/api/articoli`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     cacheArticoli = await res.json();
 
@@ -39,7 +41,7 @@ function apriDettaglio(id) {
 
 async function caricaMateriali() {
   try {
-    const res = await fetch("/api/materiali");
+    const res = await fetch(`${API}/api/materiali`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     materialiDisponibili = await res.json();
     creaRadioPill(
@@ -57,7 +59,7 @@ async function caricaMateriali() {
 
 async function caricaFiniture() {
   try {
-    const res = await fetch("/api/finiture");
+    const res = await fetch(`${API}/api/finiture`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     const finiture = await res.json();
 
@@ -229,9 +231,8 @@ function applicaFiltri() {
   galleria.innerHTML = risultati.length
     ? risultati
         .map((articolo) => {
-          const BASE_URL = "https://trentin-nas.synology.me";
           return `<div onclick="apriDettaglio(${articolo.id})" class="cursor-pointer bg-custom-800 rounded-xl shadow p-4 flex flex-col items-center text-center">
-          <img src="${BASE_URL}/immagini/articoli/${articolo.id}/principale.jpg" alt="${articolo.codice}" onerror="this.src='../resources/img/placeholder.jpg'" class="w-full aspect-square object-cover rounded mb-2" />
+          <img src="${API}/immagini/articoli/${articolo.id}/principale.jpg" alt="${articolo.codice}" onerror="this.src='../resources/img/placeholder.jpg'" class="w-full aspect-square object-cover rounded mb-2" />
           
         </div>`;
         })
