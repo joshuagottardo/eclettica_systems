@@ -1,13 +1,20 @@
 const API = import.meta.env.VITE_API_BASE || "";
-const immagini = {}; // { principale: File }
+const immagini = {};
 
-// ---------- UI helpers ----------
-function byId(id) { return document.getElementById(id); }
-function val(id)  { return byId(id)?.value?.trim() ?? ""; }
-function toInt(v) { const n = parseInt(v, 10); return Number.isFinite(n) ? n : null; }
-function toast(msg){ alert(msg); }
+function byId(id) {
+  return document.getElementById(id);
+}
+function val(id) {
+  return byId(id)?.value?.trim() ?? "";
+}
+function toInt(v) {
+  const n = parseInt(v, 10);
+  return Number.isFinite(n) ? n : null;
+}
+function toast(msg) {
+  alert(msg);
+}
 
-// ---------- Dropzone: drag&drop + tap picker ----------
 function setupDropzones() {
   document.querySelectorAll(".image-drop").forEach((dropZone) => {
     const tipo = dropZone.dataset.id;
@@ -24,19 +31,24 @@ function setupDropzones() {
 
     // preview + pulsante elimina
     const preview = document.createElement("img");
-    preview.className = "object-cover w-full h-full rounded opacity-100 hover:opacity-60 transition-opacity";
+    preview.className =
+      "object-cover w-full h-full rounded opacity-100 hover:opacity-60 transition-opacity";
     preview.style.display = "none";
     dropZone.appendChild(preview);
 
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.textContent = "Elimina";
-    delBtn.className = "absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow hover:bg-red-700";
+    delBtn.className =
+      "absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow hover:bg-red-700";
     delBtn.style.display = "none";
     dropZone.appendChild(delBtn);
 
     function setPreview(file) {
-      if (!file || !file.type.startsWith("image/")) { toast("Seleziona un'immagine valida."); return; }
+      if (!file || !file.type.startsWith("image/")) {
+        toast("Seleziona un'immagine valida.");
+        return;
+      }
       immagini[tipo] = file;
       const url = URL.createObjectURL(file);
       preview.src = url;
@@ -70,18 +82,27 @@ function setupDropzones() {
     });
 
     // drag&drop (desktop)
-    ["dragenter","dragover"].forEach(ev => dropZone.addEventListener(ev, (e) => {
-      e.preventDefault(); dropZone.classList.add("ring-2","ring-blue-500");
-    }));
-    ["dragleave","drop"].forEach(ev => dropZone.addEventListener(ev, (e) => {
-      e.preventDefault(); dropZone.classList.remove("ring-2","ring-blue-500");
-    }));
+    ["dragenter", "dragover"].forEach((ev) =>
+      dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.add("ring-2", "ring-blue-500");
+      })
+    );
+    ["dragleave", "drop"].forEach((ev) =>
+      dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("ring-2", "ring-blue-500");
+      })
+    );
     dropZone.addEventListener("drop", (e) => {
       const file = e.dataTransfer?.files?.[0];
       if (file) setPreview(file);
     });
 
-    delBtn.addEventListener("click", (e) => { e.stopPropagation(); resetPreview(); });
+    delBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      resetPreview();
+    });
   });
 }
 
@@ -92,7 +113,7 @@ async function caricaFormifici() {
     const aziende = await res.json(); // [{id, brand, ...}]
     const sel = byId("formificioInput");
     sel.innerHTML = '<option value=""></option>';
-    aziende.forEach(a => {
+    aziende.forEach((a) => {
       const opt = document.createElement("option");
       opt.value = a.id;
       opt.textContent = a.brand;
@@ -110,7 +131,7 @@ async function caricaAccessorifici() {
     const aziende = await res.json();
     const sel = byId("accessorificioInput");
     sel.innerHTML = '<option value=""></option>';
-    aziende.forEach(a => {
+    aziende.forEach((a) => {
       const opt = document.createElement("option");
       opt.value = a.id;
       opt.textContent = a.brand;
@@ -121,21 +142,20 @@ async function caricaAccessorifici() {
   }
 }
 
-// ---------- Invio ----------
 async function inviaDisegno() {
-  const articolo             = val("articoloInput");           // VARCHAR(10)
-  const id_autore            = toInt(val("autoreInput"));      // FK utente.id
-  const sigla_stagione       = val("siglaInput");              // VARCHAR(5)
-  const stagione             = val("stagioneInput");           // ENUM
-  const fondo_id_formificio  = toInt(val("formificioInput"));  // FK azienda.id
-  const fondo_articolo       = val("articoloFondoInput");      // VARCHAR(32)
-  // campi accessori: presenti in form ma NON nella tabella; ignorati o usali in futuro
-  // const accessorificio = toInt(val("accessorificioInput"));
-  // const articoloAccessorio = val("articoloAccessorioInput");
+  const articolo = val("articoloInput"); // VARCHAR(10)
+  const id_autore = toInt(val("autoreInput")); // FK utente.id
+  const modello = val("modelloInput");
+  const sigla_stagione = val("siglaInput"); // VARCHAR(5)
+  const stagione = val("stagioneInput"); // ENUM
+  const fondo_id_formificio = toInt(val("formificioInput")); // FK azienda.id
+  const fondo_articolo = val("articoloFondoInput"); // VARCHAR(32)
+  const id_accessorificio = toInt(val("accessorificioInput"));
+  const accessorio_articolo = val("articoloAccessorioInput");
+  const rendering = document.getElementById("renderingInput").checked ? 1 : 0;
 
-  // Validazioni minime
-  if (!articolo)                  return toast("Inserisci l'articolo.");
-  if (!immagini.principale)       return toast("Carica il disegno (immagine).");
+  if (!articolo) return toast("Inserisci l'articolo.");
+  if (!immagini.principale) return toast("Carica il file.");
 
   const btn = document.querySelector("button[type='submit']");
   btn.disabled = true;
@@ -143,16 +163,20 @@ async function inviaDisegno() {
   const fd = new FormData();
   fd.append("articolo", articolo);
   fd.append("id_autore", id_autore);
+  fd.append("modello", modello);
   fd.append("stagione", stagione);
   fd.append("sigla_stagione", sigla_stagione);
+  fd.append("rendering", rendering);
   fd.append("fondo_id_formificio", fondo_id_formificio);
   fd.append("fondo_articolo", fondo_articolo);
+  fd.append("id_accessorificio", id_accessorificio);
+  fd.append("articoloAccessorio", accessorio_articolo);
   fd.append("disegno", immagini.principale);
 
   try {
     const res = await fetch(`${API}/api/inserisci-disegno`, {
       method: "POST",
-      body: fd
+      body: fd,
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const json = await res.json();
@@ -171,15 +195,15 @@ async function inviaDisegno() {
   }
 }
 
-// ---------- Init ----------
 document.addEventListener("DOMContentLoaded", () => {
   setupDropzones();
-  // Se vuoi usare le option già messe in HTML per autore/accessori, puoi commentare questi:
   caricaFormifici();
   caricaAccessorifici();
 
-  document.querySelector("button[type='submit']")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    inviaDisegno();
-  });
+  document
+    .querySelector("button[type='submit']")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      inviaDisegno();
+    });
 });

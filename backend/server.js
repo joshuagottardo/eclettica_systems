@@ -410,11 +410,14 @@ app.post("/api/inserisci-disegno", upload.single("disegno"), async (req, res) =>
     const {
       articolo,
       id_autore,
+      modello,
       stagione,
       sigla_stagione,
-      modello = null,
+      rendering,
       fondo_id_formificio,
-      fondo_articolo
+      fondo_articolo,
+      id_accessorificio,
+      accessorio_articolo
     } = req.body;
 
     // Validazioni minime
@@ -429,9 +432,9 @@ app.post("/api/inserisci-disegno", upload.single("disegno"), async (req, res) =>
     // Inserimento record nel DB
     await pool.query(
       `INSERT INTO archivio_disegni 
-       (articolo, id_autore, stagione, sigla_stagione, modello, fondo_id_formificio, fondo_articolo, data_inserimento)
-       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
-      [articolo, id_autore, stagione, sigla_stagione, modello, fondo_id_formificio, fondo_articolo]
+       (articolo, id_autore, modello, stagione, sigla_stagione, rendering, fondo_id_formificio, fondo_articolo, id_accessorificio, accessorio_articolo, data_inserimento)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+      [articolo, id_autore, modello, stagione, sigla_stagione, rendering, fondo_id_formificio, fondo_articolo, id_accessorificio, accessorio_articolo]
     );
 
     // Pulizia del nome file (solo lettere, numeri, -, _)
